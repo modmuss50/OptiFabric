@@ -2,6 +2,8 @@
 
 ![](https://ss.modmuss50.me/javaw_2019-05-22_20-33-34.jpg)
 
+__Note:__ This project is not related or supported by either Fabric or Optifine.
+
 ## Installing
 
 After installing fabric for 1.14, you will need to place the OptiFabric mod jar as well as the optifine installer in the mods folder.
