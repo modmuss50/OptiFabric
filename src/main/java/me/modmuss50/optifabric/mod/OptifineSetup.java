@@ -1,6 +1,6 @@
 package me.modmuss50.optifabric.mod;
 
-import me.modmuss50.optifabric.patcher.FabricPatcher;
+import me.modmuss50.optifabric.patcher.PatchSplitter;
 import me.modmuss50.optifabric.patcher.LambadaRebuiler;
 import me.modmuss50.optifabric.patcher.RemapUtils;
 import net.fabricmc.loader.api.FabricLoader;
@@ -21,12 +21,12 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -40,9 +40,11 @@ public class OptifineSetup {
 
 	private FabricLauncher fabricLauncher = FabricLauncherBase.getLauncher();
 
+	private String inputHash;
+
 	public File getPatchedJar() throws Throwable {
 		File optifineModJar = OptifineVersion.findOptifineJar();
-		String inputHash = fileHash(optifineModJar.toPath());
+		inputHash = fileHash(optifineModJar.toPath());
 
 		File fabricOptifineJar = new File(workingDir, String.format("OptiFine-fabric-%s.jar", inputHash));
 		if (fabricOptifineJar.exists()) {
@@ -62,8 +64,8 @@ public class OptifineSetup {
 
 		File remappedJar = remapOptifine(lambadaFixJar.toPath());
 
-		FabricPatcher patcher = new FabricPatcher(remappedJar, fabricOptifineJar);
-		patcher.patch();
+		PatchSplitter patcher = new PatchSplitter(remappedJar, fabricOptifineJar);
+		patcher.extractClasses(getClassesDir());
 
 		return fabricOptifineJar;
 	}
@@ -75,7 +77,7 @@ public class OptifineSetup {
 		List<Path> mcLibs = getLibs();
 		mcLibs.add(getMinecraftJar());
 
-		File remappedJar = new File(workingDir, "OptiFine-mapped.jar");
+		File remappedJar = new File(workingDir, String.format("OptiFine-mapped-%s.jar", inputHash));
 		RemapUtils.mapJar(remappedJar.toPath(), input, createWorkaround(mappingConfiguration.getMappings(), "official", namespace), mcLibs);
 
 		return remappedJar;
@@ -136,7 +138,7 @@ public class OptifineSetup {
 	}
 
 	//Gets the offical minecraft jar
-	Path getMinecraftJar() {
+	Path getMinecraftJar() throws FileNotFoundException {
 		Optional<Path> entrypointResult = findFirstClass(Knot.class.getClassLoader(), Collections.singletonList("net.minecraft.client.main.Main"));
 		if (!entrypointResult.isPresent()) {
 			throw new RuntimeException("Failed to find minecraft jar");
@@ -146,8 +148,11 @@ public class OptifineSetup {
 		}
 		if(fabricLauncher.isDevelopment()){
 			Path path = entrypointResult.get().getParent();
-
-			throw new UnsupportedOperationException("Code this in");
+			Path minecraftJar = path.resolve("minecraft-1.14-client.jar"); //Lets hope you are using loom in dev
+			if(!Files.exists(minecraftJar)){
+				throw new FileNotFoundException("Could not find minecraft jar!");
+			}
+			return minecraftJar;
 		}
 		return entrypointResult.get();
 	}
@@ -216,4 +221,15 @@ public class OptifineSetup {
 		}
 	}
 
+	public String getInputHash() {
+		return inputHash;
+	}
+
+	public File getWorkingDir() {
+		return workingDir;
+	}
+
+	public File getClassesDir(){
+		return new File(workingDir, "classes-" + getInputHash());
+	}
 }

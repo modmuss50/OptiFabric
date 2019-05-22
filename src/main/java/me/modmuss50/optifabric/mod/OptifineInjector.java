@@ -1,14 +1,12 @@
 package me.modmuss50.optifabric.mod;
 
 import com.chocohead.mm.api.ClassTinkerers;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.spongepowered.asm.lib.ClassReader;
 import org.spongepowered.asm.lib.tree.ClassNode;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.function.Consumer;
@@ -16,16 +14,14 @@ import java.util.jar.JarFile;
 
 public class OptifineInjector {
 
-	JarFile optifineJar;
+	File classesDir;
 
-	public OptifineInjector(JarFile optifineJar) {
-		this.optifineJar = optifineJar;
+	public OptifineInjector(File classesDir) {
+		this.classesDir = classesDir;
 	}
 
 	public void setup() throws IOException {
-
-		InputStream is = optifineJar.getInputStream(optifineJar.getJarEntry("fabric_classes.txt"));
-		String classes = toString(is, StandardCharsets.UTF_8);
+		String classes = FileUtils.readFileToString(new File(classesDir, "fabric_classes.txt"), StandardCharsets.UTF_8);
 
 		for (String clazz : classes.split(";")) {
 			ClassTinkerers.addTransformation(clazz.replaceAll("/", "."), transformer);
@@ -46,17 +42,19 @@ public class OptifineInjector {
 			target.innerClasses = source.innerClasses;
 
 		} catch (IOException e) {
-			throw new RuntimeException("Failed to patch class");
+			throw new RuntimeException("Failed to extractClasses class");
 		}
 	};
 
 	private ClassNode getSourceClassNode(ClassNode classNode) throws IOException {
 		String name = classNode.name.replaceAll("\\.", "/") + ".class";
-		InputStream is = optifineJar.getInputStream(optifineJar.getJarEntry(name));
-		if (is == null) {
-			throw new RuntimeException("Failed to find" + name);
+		File file = new File(classesDir, name);
+		if(!file.exists()){
+			throw new FileNotFoundException("Could not find" + name);
 		}
+		InputStream is = new FileInputStream(file);
 		byte[] bytes = IOUtils.toByteArray(is);
+		is.close();
 		return readClassFromBytes(bytes);
 	}
 

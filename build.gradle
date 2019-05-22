@@ -41,8 +41,8 @@ repositories {
 }
 
 dependencies {
-	modCompile 'com.github.Chocohead:Fabric-ASM:v1.5'
-	include 'com.github.Chocohead:Fabric-ASM:v1.5'
+	modCompile 'com.github.Chocohead:Fabric-ASM:c4ad22d'
+	include 'com.github.Chocohead:Fabric-ASM:c4ad22d'
 
 	compile 'org.zeroturnaround:zt-zip:1.13'
 	include 'org.zeroturnaround:zt-zip:1.13'

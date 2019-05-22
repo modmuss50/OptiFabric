@@ -23,10 +23,13 @@
     ]
   },
   "mixins": [
-    "optifabric.mixins.json",
-    "optifabric.plugin.mixins.json"
+    "optifabric.mixins.json"
   ],
-
+  "custom": {
+    "mm:early_risers": [
+      "me.modmuss50.optifabric.mod.OptifabricSetup"
+    ]
+  },
   "requires": {
     "fabricloader": ">=0.4.0",
     "fabric": "*"

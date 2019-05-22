@@ -5,25 +5,27 @@ import org.zeroturnaround.zip.ZipUtil;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.function.Function;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-//Patches the intermediary optifine jar to work on fabric
-public class FabricPatcher {
+//Pulls out the patched classes and saves them into a directory, and then returns a jar without the patched classes
+public class PatchSplitter {
 
 	private File inputFile;
 	private File outputFile;
 
-	public FabricPatcher(File inputFile, File outputFile) {
+	public PatchSplitter(File inputFile, File outputFile) {
 		this.inputFile = inputFile;
 		this.outputFile = outputFile;
 	}
 
-	public void patch() throws IOException {
-		System.out.println("Generating optifine class patch list");
+	public void extractClasses(File directory) throws IOException {
+		System.out.println("Generating optifine class extractClasses list");
 		if (outputFile.exists()) {
 			outputFile.delete();
 		}
@@ -42,7 +44,15 @@ public class FabricPatcher {
 
 		System.out.println("Found " + patchedClasses.size() + " patched classes");
 
-		ZipUtil.addEntry(outputFile, "fabric_classes.txt", String.join(";", patchedClasses).getBytes());
+		//Write out all the classes to disk
+		FileUtils.writeStringToFile(new File(directory, "fabric_classes.txt"), String.join(";", patchedClasses), StandardCharsets.UTF_8);
+
+		//Extract the jar
+		ZipUtil.unpack(outputFile, directory);
+		//Remove all the classes that are going to be patched in, we dont want theses on the classpath
+		ZipUtil.removeEntries(outputFile, patchedClasses.stream().map(s -> s + ".class").toArray(String[]::new));
+
+
 	}
 
 }
