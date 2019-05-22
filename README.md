@@ -16,11 +16,11 @@ Note currently only fabric api 0.2.7 is supported, you can download it from [her
 
 ### [OptiFabric Download](https://github.com/modmuss50/OptiFabric/releases)
 
-### [OptiFabric Download](https://optifine.net/downloads) (current 1.14 builds are under the preview section)
+### [Optifine Download](https://optifine.net/downloads) (current 1.14 builds are under the preview section)
 
 ## Issues
 
-If you happen to find an issue and you believe it is to od with OptiFabric and not Optifine or a mod please open an issue [here](https://github.com/modmuss50/OptiFabric/issues) 
+If you happen to find an issue and you believe it is to do with OptiFabric and not Optifine or a mod please open an issue [here](https://github.com/modmuss50/OptiFabric/issues) 
 
 
 Note Fabric, Optifine and OptiFabric are still all in beta, so things will be broken.
