@@ -41,6 +41,8 @@ repositories {
 }
 
 dependencies {
+	modCompile 'net.fabricmc:fabric:0.2.7+build.127'
+
 	modCompile 'com.github.Chocohead:Fabric-ASM:c4ad22d'
 	include 'com.github.Chocohead:Fabric-ASM:c4ad22d'
 
