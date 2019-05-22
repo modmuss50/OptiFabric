@@ -18,7 +18,7 @@ public class Optifabric implements ModInitializer {
 		if (OptifineVersion.error != null) {
 			YesNoScreen yesNoScreen = new YesNoScreen(t -> {
 				if (t) {
-					SystemUtil.getOperatingSystem().open("");
+					SystemUtil.getOperatingSystem().open("https://github.com/modmuss50/OptiFabric/blob/master/README.md");
 				} else {
 					MinecraftClient.getInstance().scheduleStop();
 				}
