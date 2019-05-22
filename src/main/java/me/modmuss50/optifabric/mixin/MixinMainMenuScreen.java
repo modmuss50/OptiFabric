@@ -35,7 +35,7 @@ public abstract class MixinMainMenuScreen extends Screen {
 
 	@Inject(method = "render", at = @At("RETURN"))
 	private void render(int int_1, int int_2, float float_1, CallbackInfo info) {
-		if (!OptifineVersion.error.isPresent()) {
+		if (OptifineVersion.error == null) {
 			float fadeTime = this.doBackgroundFade ? (float) (SystemUtil.getMeasuringTimeMs() - this.backgroundFadeStart) / 1000.0F : 1.0F;
 			float fadeColor = this.doBackgroundFade ? MathHelper.clamp(fadeTime - 1.0F, 0.0F, 1.0F) : 1.0F;
 

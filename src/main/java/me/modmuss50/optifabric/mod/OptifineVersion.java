@@ -3,23 +3,24 @@ package me.modmuss50.optifabric.mod;
 import me.modmuss50.optifabric.patcher.ASMUtils;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.MinecraftVersion;
-import org.apache.commons.lang3.tuple.Pair;
 import org.spongepowered.asm.lib.tree.ClassNode;
 import org.spongepowered.asm.lib.tree.FieldNode;
+import org.zeroturnaround.zip.ZipUtil;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Optional;
+import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 public class OptifineVersion {
 
-	public static Optional<Pair<String, String>> error = Optional.empty();
+	public static String error = null;
 	public static String version;
 	public static String minecraftVersion;
+	public static JarType jarType;
 
-	public static File findOptifineJar() throws FileNotFoundException {
+	public static File findOptifineJar() throws IOException {
 		File modsDir = new File(FabricLoader.getInstance().getGameDirectory(), "mods");
 		File[] mods = modsDir.listFiles();
 		if (mods != null) {
@@ -28,34 +29,29 @@ public class OptifineVersion {
 					continue;
 				}
 				if (file.getName().endsWith(".jar")) {
-					if (OptifineVersion.isOptifine(file)) {
-						System.out.println("Found " + version);
+					JarType type = getJarType(file);
+					if (type.error) {
+						throw new RuntimeException("An error occurred when trying to find the optifine jar: " + error);
+					}
+					if (type == JarType.OPIFINE_MOD || type == JarType.OPTFINE_INSTALLER) {
+						jarType = type;
 						return file;
 					}
 				}
 			}
 		}
 
-		error = Optional.of(Pair.of("OptiFabric could not find the Optifine extracted jar file in the mods folder. \n\n Would you like to open the help page?", "https://gist.github.com/modmuss50/4b2dbfc3488a0a1f1e72d037406f77af"));
-
+		error = "OptiFabric could not find the Optifine jar in the mods folder.";
 		throw new FileNotFoundException("Could not find optifine jar");
 	}
 
-	private static boolean isOptifine(File file) {
-		try {
-			readJar(file);
-			return true;
-		} catch (NullPointerException e) {
-			return false;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
-	}
-
-	private static void readJar(File file) throws IOException {
+	private static JarType getJarType(File file) throws IOException {
 		JarFile jarFile = new JarFile(file);
-		ClassNode classNode = ASMUtils.asClassNode(jarFile.getJarEntry("Config.class"), jarFile);
+		JarEntry jarEntry = jarFile.getJarEntry("Config.class"); // I hope this is enough to detect optifine
+		if (jarEntry == null) {
+			return JarType.SOMETHINGELSE;
+		}
+		ClassNode classNode = ASMUtils.asClassNode(jarEntry, jarFile);
 		for (FieldNode fieldNode : classNode.fields) {
 			if (fieldNode.name.equals("VERSION")) {
 				version = (String) fieldNode.value;
@@ -65,17 +61,68 @@ public class OptifineVersion {
 			}
 		}
 
+		if (version == null || version.isEmpty() || minecraftVersion == null || minecraftVersion.isEmpty()) {
+			return JarType.INCOMPATIBE;
+		}
+
 		//I hope this isnt too early
 		MinecraftVersion mcVersion = (MinecraftVersion) MinecraftVersion.create();
 		if (!mcVersion.getName().equals(minecraftVersion)) {
-			error = Optional.of(Pair.of("This version of optifine is incompatible with the current version of minecraft", "https://optifine.net/downloads"));
-			throw new UnsupportedOperationException("The provided optifine version is incompatible with this version of minecraft");
+			error = "This version of optifine is not compatible with the current minecraft version";
+			return JarType.INCOMPATIBE;
 		}
 
-		if (false) { //TODO check to see if its an installer jar
-			error = Optional.of(Pair.of("You have not extracted the Optifine mod using the installer \n\n Would you like to open the help page?", "https://gist.github.com/modmuss50/be44623562b6a0bac1bf8bef6d835a5f"));
-			throw new UnsupportedOperationException("Invalid optifine jar");
+		Holder<Boolean> isInstaller = new Holder<>(false);
+		ZipUtil.iterate(file, (in, zipEntry) -> {
+			if (zipEntry.getName().startsWith("patch/")) {
+				isInstaller.setValue(true);
+			}
+		});
+
+		if (isInstaller.getValue()) {
+			return JarType.OPTFINE_INSTALLER;
+		} else {
+			return JarType.OPIFINE_MOD;
 		}
+	}
+
+	public enum JarType {
+		OPIFINE_MOD(false),
+		OPTFINE_INSTALLER(false),
+		INCOMPATIBE(true),
+		SOMETHINGELSE(false);
+
+		boolean error;
+
+		JarType(boolean error) {
+			this.error = error;
+		}
+
+		public boolean isError() {
+			return error;
+		}
+	}
+
+	private static class Holder<T> {
+
+		T value;
+
+		private Holder(T value) {
+			this.value = value;
+		}
+
+		public T getValue() {
+			return value;
+		}
+
+		public void setValue(T value) {
+			this.value = value;
+		}
+
+		public static <T> Holder<T> of(T value) {
+			return new Holder<>(value);
+		}
+
 	}
 
 }

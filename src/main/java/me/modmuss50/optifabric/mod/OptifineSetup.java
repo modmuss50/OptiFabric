@@ -43,8 +43,19 @@ public class OptifineSetup {
 	private String inputHash;
 
 	public File getPatchedJar() throws Throwable {
+		if (!workingDir.exists()) {
+			workingDir.mkdirs();
+		}
 		File optifineModJar = OptifineVersion.findOptifineJar();
 		inputHash = fileHash(optifineModJar.toPath());
+
+		if (OptifineVersion.jarType == OptifineVersion.JarType.OPTFINE_INSTALLER) {
+			File optifineMod = new File(workingDir, String.format("OptiFine-mod-%s.jar", inputHash));
+			if (!optifineMod.exists()) {
+				OptifineInstaller.extract(optifineModJar, optifineMod, getMinecraftJar().toFile());
+			}
+			optifineModJar = optifineMod;
+		}
 
 		File fabricOptifineJar = new File(workingDir, String.format("OptiFine-fabric-%s.jar", inputHash));
 		if (fabricOptifineJar.exists()) {

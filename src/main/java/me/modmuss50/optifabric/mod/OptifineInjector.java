@@ -6,14 +6,16 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.lib.ClassReader;
-import org.spongepowered.asm.lib.tree.*;
+import org.spongepowered.asm.lib.tree.AbstractInsnNode;
+import org.spongepowered.asm.lib.tree.ClassNode;
+import org.spongepowered.asm.lib.tree.FrameNode;
+import org.spongepowered.asm.lib.tree.MethodNode;
 
 import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 
 public class OptifineInjector {
 
@@ -41,13 +43,13 @@ public class OptifineInjector {
 			target.fields = source.fields;
 			target.interfaces = source.interfaces;
 			target.superName = source.superName;
-			
+
 			//Not sure why this is needed, seems to fix it tho
 			for (MethodNode methodNode : target.methods) {
-				for(AbstractInsnNode insnNode : methodNode.instructions.toArray()){
-					if(insnNode instanceof FrameNode){
+				for (AbstractInsnNode insnNode : methodNode.instructions.toArray()) {
+					if (insnNode instanceof FrameNode) {
 						FrameNode frameNode = (FrameNode) insnNode;
-						if(frameNode.local == null){
+						if (frameNode.local == null) {
 							frameNode.local = Collections.emptyList();
 						}
 					}
@@ -55,7 +57,7 @@ public class OptifineInjector {
 			}
 
 			// Lets make every class we touch public
-			if(!FabricLoader.getInstance().isDevelopmentEnvironment()){
+			if (!FabricLoader.getInstance().isDevelopmentEnvironment()) {
 				target.access = modAccess(target.access);
 				target.methods.forEach(methodNode -> methodNode.access = modAccess(methodNode.access));
 				target.fields.forEach(fieldNode -> fieldNode.access = modAccess(fieldNode.access));

@@ -15,14 +15,14 @@ public class Optifabric implements ModInitializer {
 	}
 
 	public static void checkForErrors() {
-		if (OptifineVersion.error.isPresent()) {
+		if (OptifineVersion.error != null) {
 			YesNoScreen yesNoScreen = new YesNoScreen(t -> {
 				if (t) {
-					SystemUtil.getOperatingSystem().open(OptifineVersion.error.get().getRight());
+					SystemUtil.getOperatingSystem().open("");
 				} else {
 					MinecraftClient.getInstance().scheduleStop();
 				}
-			}, new TextComponent(ChatFormat.RED + "There was an error finding Optifine in the mods folder!"), new TextComponent(OptifineVersion.error.get().getLeft()), ChatFormat.GREEN + "Open Help", ChatFormat.RED + "Close Game");
+			}, new TextComponent(ChatFormat.RED + "There was an error finding Optifine in the mods folder!"), new TextComponent(OptifineVersion.error), ChatFormat.GREEN + "Open Help", ChatFormat.RED + "Close Game");
 
 			MinecraftClient.getInstance().openScreen(yesNoScreen);
 		}
