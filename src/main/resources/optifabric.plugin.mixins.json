@@ -1,0 +1,9 @@
+{
+  "required": true,
+  "package": "me.modmuss50.optifabric.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "plugin": "me.modmuss50.optifabric.mod.asm.MixinPlugin",
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

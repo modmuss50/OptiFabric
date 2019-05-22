@@ -1,0 +1,11 @@
+{
+  "required": true,
+  "package": "me.modmuss50.optifabric.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "MixinMainMenuScreen"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

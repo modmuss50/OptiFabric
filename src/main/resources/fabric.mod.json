@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "id": "optifabric",
+  "version": "${version}",
+
+  "name": "Optifine",
+  "description": "This is an example description! Tell everyone what your mod is about!",
+  "authors": [
+    "Me!"
+  ],
+  "contact": {
+    "homepage": "https://fabricmc.net/",
+    "sources": "https://github.com/FabricMC/fabric-example-mod"
+  },
+
+  "license": "CC0-1.0",
+  "icon": "assets/modid/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "me.modmuss50.optifabric.mod.Optifabric"
+    ]
+  },
+  "mixins": [
+    "optifabric.mixins.json",
+    "optifabric.plugin.mixins.json"
+  ],
+
+  "requires": {
+    "fabricloader": ">=0.4.0",
+    "fabric": "*"
+  },
+  "suggests": {
+    "flamingo": "*"
+  }
+}
