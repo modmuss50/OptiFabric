@@ -3,7 +3,6 @@ package me.modmuss50.optifabric.mod;
 import com.chocohead.mm.api.ClassTinkerers;
 
 import java.io.File;
-import java.util.jar.JarFile;
 
 public class OptifabricSetup implements Runnable {
 

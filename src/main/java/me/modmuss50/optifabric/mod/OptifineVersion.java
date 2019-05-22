@@ -4,8 +4,8 @@ import me.modmuss50.optifabric.patcher.ASMUtils;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.MinecraftVersion;
 import org.apache.commons.lang3.tuple.Pair;
-import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.FieldNode;
+import org.spongepowered.asm.lib.tree.ClassNode;
+import org.spongepowered.asm.lib.tree.FieldNode;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -60,19 +60,19 @@ public class OptifineVersion {
 			if (fieldNode.name.equals("VERSION")) {
 				version = (String) fieldNode.value;
 			}
-			if(fieldNode.name.equals("MC_VERSION")){
+			if (fieldNode.name.equals("MC_VERSION")) {
 				minecraftVersion = (String) fieldNode.value;
 			}
 		}
 
 		//I hope this isnt too early
 		MinecraftVersion mcVersion = (MinecraftVersion) MinecraftVersion.create();
-		if(!mcVersion.getName().equals(minecraftVersion)){
+		if (!mcVersion.getName().equals(minecraftVersion)) {
 			error = Optional.of(Pair.of("This version of optifine is incompatible with the current version of minecraft", "https://optifine.net/downloads"));
 			throw new UnsupportedOperationException("The provided optifine version is incompatible with this version of minecraft");
 		}
 
-		if(false){ //TODO check to see if its an installer jar
+		if (false) { //TODO check to see if its an installer jar
 			error = Optional.of(Pair.of("You have not extracted the Optifine mod using the installer \n\n Would you like to open the help page?", "https://gist.github.com/modmuss50/be44623562b6a0bac1bf8bef6d835a5f"));
 			throw new UnsupportedOperationException("Invalid optifine jar");
 		}

@@ -10,7 +10,6 @@ import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.function.Consumer;
-import java.util.jar.JarFile;
 
 public class OptifineInjector {
 
@@ -30,16 +29,12 @@ public class OptifineInjector {
 
 	public final Consumer<ClassNode> transformer = target -> {
 		try {
-			//System.out.println("Patching " + target.name);
 
+			//I cannot imagine this being very good at all
 			ClassNode source = getSourceClassNode(target);
 			target.methods = source.methods;
 			target.fields = source.fields;
 			target.interfaces = source.interfaces;
-			target.superName = source.superName;
-			target.access = source.access;
-			target.attrs = source.attrs;
-			target.innerClasses = source.innerClasses;
 
 		} catch (IOException e) {
 			throw new RuntimeException("Failed to extractClasses class");
@@ -49,7 +44,7 @@ public class OptifineInjector {
 	private ClassNode getSourceClassNode(ClassNode classNode) throws IOException {
 		String name = classNode.name.replaceAll("\\.", "/") + ".class";
 		File file = new File(classesDir, name);
-		if(!file.exists()){
+		if (!file.exists()) {
 			throw new FileNotFoundException("Could not find" + name);
 		}
 		InputStream is = new FileInputStream(file);

@@ -9,7 +9,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.function.Function;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -51,7 +50,6 @@ public class PatchSplitter {
 		ZipUtil.unpack(outputFile, directory);
 		//Remove all the classes that are going to be patched in, we dont want theses on the classpath
 		ZipUtil.removeEntries(outputFile, patchedClasses.stream().map(s -> s + ".class").toArray(String[]::new));
-
 
 	}
 

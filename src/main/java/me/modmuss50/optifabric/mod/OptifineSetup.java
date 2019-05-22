@@ -1,7 +1,7 @@
 package me.modmuss50.optifabric.mod;
 
-import me.modmuss50.optifabric.patcher.PatchSplitter;
 import me.modmuss50.optifabric.patcher.LambadaRebuiler;
+import me.modmuss50.optifabric.patcher.PatchSplitter;
 import me.modmuss50.optifabric.patcher.RemapUtils;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.launch.common.FabricLauncher;
@@ -146,10 +146,10 @@ public class OptifineSetup {
 		if (!Files.exists(entrypointResult.get())) {
 			throw new RuntimeException("Failed to locate minecraft jar");
 		}
-		if(fabricLauncher.isDevelopment()){
+		if (fabricLauncher.isDevelopment()) {
 			Path path = entrypointResult.get().getParent();
 			Path minecraftJar = path.resolve("minecraft-1.14-client.jar"); //Lets hope you are using loom in dev
-			if(!Files.exists(minecraftJar)){
+			if (!Files.exists(minecraftJar)) {
 				throw new FileNotFoundException("Could not find minecraft jar!");
 			}
 			return minecraftJar;
@@ -229,7 +229,7 @@ public class OptifineSetup {
 		return workingDir;
 	}
 
-	public File getClassesDir(){
+	public File getClassesDir() {
 		return new File(workingDir, "classes-" + getInputHash());
 	}
 }

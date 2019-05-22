@@ -1,10 +1,10 @@
 package me.modmuss50.optifabric.patcher;
 
 import org.apache.commons.io.IOUtils;
-import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.ClassNode;
+import org.spongepowered.asm.lib.ClassReader;
+import org.spongepowered.asm.lib.ClassWriter;
+import org.spongepowered.asm.lib.Opcodes;
+import org.spongepowered.asm.lib.tree.ClassNode;
 
 import java.io.IOException;
 import java.io.InputStream;
