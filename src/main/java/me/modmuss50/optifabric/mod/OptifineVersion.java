@@ -2,20 +2,22 @@ package me.modmuss50.optifabric.mod;
 
 import me.modmuss50.optifabric.patcher.ASMUtils;
 import net.fabricmc.loader.api.FabricLoader;
+import org.apache.commons.lang3.tuple.Pair;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldNode;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Optional;
 import java.util.jar.JarFile;
 
 public class OptifineVersion {
 
-	public static boolean validOptifine = false;
-	public static boolean isInstaller = false;
+	public static Optional<Pair<String, String>> error = Optional.empty();
 	public static String version;
 
-	public static File findOptifineJar() {
+	public static File findOptifineJar() throws FileNotFoundException {
 		File modsDir = new File(FabricLoader.getInstance().getGameDirectory(), "mods");
 		File[] mods = modsDir.listFiles();
 		if (mods != null) {
@@ -32,13 +34,15 @@ public class OptifineVersion {
 			}
 		}
 
-		return new File("C:\\Users\\mark\\Desktop\\OptiFine_1.14_HD_U_F1_pre2_MOD.jar");
+		error = Optional.of(Pair.of("OptiFabric could not find the Optifine extracted jar file in the mods folder. \n\n Would you like to open the help page?", "https://gist.github.com/modmuss50/4b2dbfc3488a0a1f1e72d037406f77af"));
+
+		throw new FileNotFoundException("Could not find optifine jar");
 	}
 
 	private static boolean isOptifine(File file) {
 		try {
 			readJar(file);
-			return validOptifine;
+			return true;
 		} catch (Exception e) {
 			return false;
 		}
@@ -50,8 +54,10 @@ public class OptifineVersion {
 		for (FieldNode fieldNode : classNode.fields) {
 			if (fieldNode.name.equals("VERSION")) {
 				version = (String) fieldNode.value;
-				validOptifine = true;
 			}
+		}
+		if(false){ //TODO check to see if its an installer jar
+			error = Optional.of(Pair.of("You have not extracted the Optifine mod using the installer \n\n Would you like to open the help page?", "https://gist.github.com/modmuss50/be44623562b6a0bac1bf8bef6d835a5f"));
 		}
 	}
 

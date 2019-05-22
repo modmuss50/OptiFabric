@@ -137,16 +137,17 @@ public class OptifineSetup {
 
 	//Gets the offical minecraft jar
 	Path getMinecraftJar() {
-		if (fabricLauncher.isDevelopment()) {
-			System.out.println("Using fallback jar for development");
-			return Paths.get("C:\\Users\\mark\\Desktop\\1.14.jar");
-		}
 		Optional<Path> entrypointResult = findFirstClass(Knot.class.getClassLoader(), Collections.singletonList("net.minecraft.client.main.Main"));
 		if (!entrypointResult.isPresent()) {
 			throw new RuntimeException("Failed to find minecraft jar");
 		}
 		if (!Files.exists(entrypointResult.get())) {
 			throw new RuntimeException("Failed to locate minecraft jar");
+		}
+		if(fabricLauncher.isDevelopment()){
+			Path path = entrypointResult.get().getParent();
+
+			throw new UnsupportedOperationException("Code this in");
 		}
 		return entrypointResult.get();
 	}
