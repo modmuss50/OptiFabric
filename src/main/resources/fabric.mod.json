@@ -3,8 +3,8 @@
   "id": "optifabric",
   "version": "${version}",
 
-  "name": "Optifine",
-  "description": "This is an example description! Tell everyone what your mod is about!",
+  "name": "Optifabric",
+  "description": "Optifabric is a mod that loads optifine into fabric",
   "authors": [
     "Me!"
   ],
@@ -14,7 +14,7 @@
   },
 
   "license": "CC0-1.0",
-  "icon": "assets/modid/icon.png",
+  "icon": "assets/optifabric/icon.png",
 
   "environment": "*",
   "entrypoints": {
@@ -31,10 +31,6 @@
     ]
   },
   "requires": {
-    "fabricloader": ">=0.4.0",
-    "fabric": "*"
-  },
-  "suggests": {
-    "flamingo": "*"
+    "fabricloader": ">=0.4.0"
   }
 }
