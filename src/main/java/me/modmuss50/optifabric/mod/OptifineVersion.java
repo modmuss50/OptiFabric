@@ -23,6 +23,9 @@ public class OptifineVersion {
 	public static File findOptifineJar() throws IOException {
 		File modsDir = new File(FabricLoader.getInstance().getGameDirectory(), "mods");
 		File[] mods = modsDir.listFiles();
+
+		File optifineJar = null;
+
 		if (mods != null) {
 			for (File file : mods) {
 				if (file.isDirectory()) {
@@ -34,11 +37,19 @@ public class OptifineVersion {
 						throw new RuntimeException("An error occurred when trying to find the optifine jar: " + error);
 					}
 					if (type == JarType.OPIFINE_MOD || type == JarType.OPTFINE_INSTALLER) {
+						if(optifineJar != null){
+							error = "Found 2 or more optifine jars, please ensure you only have 1 copy of optifine in the mods folder!";
+							throw new FileNotFoundException("Multiple optifine jars");
+						}
 						jarType = type;
-						return file;
+						optifineJar =  file;
 					}
 				}
 			}
+		}
+
+		if(optifineJar != null){
+			return optifineJar;
 		}
 
 		error = "OptiFabric could not find the Optifine jar in the mods folder.";
@@ -68,7 +79,7 @@ public class OptifineVersion {
 		//I hope this isnt too early
 		MinecraftVersion mcVersion = (MinecraftVersion) MinecraftVersion.create();
 		if (!mcVersion.getName().equals(minecraftVersion)) {
-			error = "This version of optifine is not compatible with the current minecraft version";
+			error = String.format("This version of optifine is not compatible with the current minecraft version\n\n Optifine requires %s you have %s", minecraftVersion, mcVersion.getName());
 			return JarType.INCOMPATIBE;
 		}
 

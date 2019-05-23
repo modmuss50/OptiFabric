@@ -30,14 +30,28 @@ public class OptifabricSetup implements Runnable {
 			throw new RuntimeException("Failed to setup optifine", e);
 		}
 
-		if(FabricLoader.getInstance().isModLoaded("fabric-renderer-indigo")){
-			try {
-				Method method = FabricMixinBootstrap.class.getDeclaredMethod("addConfiguration", String.class);
-				method.setAccessible(true);
-				method.invoke(null, "optifabric.indigofix.mixins.json");
-			} catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-				throw new RuntimeException("Failed to inject indigo render fixes", e);
+		try {
+			if(FabricLoader.getInstance().isModLoaded("fabric-renderer-indigo")){
+				addMixinConfig("optifabric.indigofix.mixins.json");
 			}
+
+			addMixinConfig("optifabric.optifine.mixins.json");
+		} catch (Exception e){
+			if(OptifineVersion.error == null || OptifineVersion.error.isEmpty()){
+				OptifineVersion.jarType = OptifineVersion.JarType.INCOMPATIBE;
+				OptifineVersion.error = "Failed to load optifine, check the log for more info \n\n " + e.getMessage();
+			}
+			throw new RuntimeException("Failed to setup optifine", e);
+		}
+	}
+
+	private static void addMixinConfig(String mixinConfig){
+		try {
+			Method method = FabricMixinBootstrap.class.getDeclaredMethod("addConfiguration", String.class);
+			method.setAccessible(true);
+			method.invoke(null, mixinConfig);
+		} catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+			throw new RuntimeException("Failed to inject indigo render fixes", e);
 		}
 	}
 }
