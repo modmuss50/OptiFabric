@@ -10,7 +10,9 @@ __Note:__ This project does not contain Optifine, you must download it separatel
 
 After installing fabric for 1.14, you will need to place the OptiFabric mod jar as well as the optifine installer in the mods folder.
 
-Fabric API 0.2.7 is recommended, you can download it from [here](https://minecraft.curseforge.com/projects/fabric/files/2702281). Newer (0.3.0+) versions may have issues with shaders, if you know how to fix this please get in contact, thanks.
+Fabric Loader should be the latest version from the [Fabric Website](https://fabricmc.net/use/)
+
+If you are using Fabric API version 0.2.7 is recommended, you can download it from [here](https://minecraft.curseforge.com/projects/fabric/files/2702281). Newer (0.3.0+) versions may have issues with shaders, a fix is being worked on.
 
 ## Links
 
