@@ -14,7 +14,7 @@ Fabric API 0.2.7 is recommended, you can download it from [here](https://minecra
 
 ## Links
 
-### [OptiFabric Download](https://github.com/modmuss50/OptiFabric/releases)
+### [OptiFabric Downloads](https://minecraft.curseforge.com/projects/optifabric)
 
 ### [Optifine Download](https://optifine.net/downloads) (current 1.14 builds are under the preview section)
 
