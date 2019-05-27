@@ -1,11 +1,13 @@
 package me.modmuss50.optifabric.mod;
 
 import com.chocohead.mm.api.ClassTinkerers;
+import me.modmuss50.optifabric.patcher.ASMUtils;
 import net.fabricmc.loader.api.FabricLoader;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+
 import org.objectweb.asm.Opcodes;
-import org.spongepowered.asm.lib.ClassReader;
 import org.spongepowered.asm.lib.tree.AbstractInsnNode;
 import org.spongepowered.asm.lib.tree.ClassNode;
 import org.spongepowered.asm.lib.tree.FrameNode;
@@ -14,7 +16,6 @@ import org.spongepowered.asm.lib.tree.MethodNode;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.Collections;
 import java.util.function.Consumer;
 
 public class OptifineInjector {
@@ -44,13 +45,13 @@ public class OptifineInjector {
 			target.interfaces = source.interfaces;
 			target.superName = source.superName;
 
-			//Not sure why this is needed, seems to fix it tho
+			//Classes should be read with frames expanded (as Mixin itself does it), in which case this should all be fine
 			for (MethodNode methodNode : target.methods) {
 				for (AbstractInsnNode insnNode : methodNode.instructions.toArray()) {
 					if (insnNode instanceof FrameNode) {
 						FrameNode frameNode = (FrameNode) insnNode;
 						if (frameNode.local == null) {
-							frameNode.local = Collections.emptyList();
+							throw new IllegalStateException("Null locals in " + frameNode.type + " frame @ " + source.name + "#" + methodNode.name + methodNode.desc);
 						}
 					}
 				}
@@ -85,14 +86,7 @@ public class OptifineInjector {
 		InputStream is = new FileInputStream(file);
 		byte[] bytes = IOUtils.toByteArray(is);
 		is.close();
-		return readClassFromBytes(bytes);
-	}
-
-	private ClassNode readClassFromBytes(byte[] bytes) {
-		ClassNode classNode = new ClassNode();
-		ClassReader classReader = new ClassReader(bytes);
-		classReader.accept(classNode, 0);
-		return classNode;
+		return ASMUtils.readClassFromBytes(bytes);
 	}
 
 	public String toString(InputStream inputStream, Charset charset) throws IOException {

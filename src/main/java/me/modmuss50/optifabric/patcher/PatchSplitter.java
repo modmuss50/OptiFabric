@@ -32,12 +32,13 @@ public class PatchSplitter {
 
 		List<String> patchedClasses = new ArrayList<>();
 
-		JarFile jarFile = new JarFile(inputFile);
-		Enumeration<JarEntry> entrys = jarFile.entries();
-		while (entrys.hasMoreElements()) {
-			JarEntry entry = entrys.nextElement();
-			if ((entry.getName().startsWith("net/minecraft/") || entry.getName().startsWith("com/mojang/")) && entry.getName().endsWith(".class")) {
-				patchedClasses.add(entry.getName().substring(0, entry.getName().length() - 6));
+		try (JarFile jarFile = new JarFile(inputFile)) {
+			Enumeration<JarEntry> entrys = jarFile.entries();
+			while (entrys.hasMoreElements()) {
+				JarEntry entry = entrys.nextElement();
+				if ((entry.getName().startsWith("net/minecraft/") || entry.getName().startsWith("com/mojang/")) && entry.getName().endsWith(".class")) {
+					patchedClasses.add(entry.getName().substring(0, entry.getName().length() - 6));
+				}
 			}
 		}
 

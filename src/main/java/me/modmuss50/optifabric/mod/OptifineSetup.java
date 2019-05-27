@@ -12,6 +12,7 @@ import net.fabricmc.loader.util.UrlConversionException;
 import net.fabricmc.loader.util.UrlUtil;
 import net.fabricmc.loader.util.mappings.TinyRemapperMappingsHelper;
 import net.fabricmc.mappings.ClassEntry;
+import net.fabricmc.mappings.EntryTriple;
 import net.fabricmc.mappings.FieldEntry;
 import net.fabricmc.mappings.Mappings;
 import net.fabricmc.mappings.MethodEntry;
@@ -27,9 +28,15 @@ import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -89,20 +96,38 @@ public class OptifineSetup {
 		mcLibs.add(getMinecraftJar());
 
 		File remappedJar = new File(workingDir, String.format("OptiFine-mapped-%s.jar", inputHash));
-		RemapUtils.mapJar(remappedJar.toPath(), input, createWorkaround(mappingConfiguration.getMappings(), "official", namespace), mcLibs);
+		RemapUtils.mapJar(remappedJar.toPath(), input, createMappings("official", namespace), mcLibs);
 
 		return remappedJar;
 	}
 
-	//This is fun, not sure why theses 2 fields dont like to be remapped
-	IMappingProvider createWorkaround(Mappings mappings, String from, String to) {
+	//Optifine currently has two fields that match the same name as Yarn mappings, we'll rename Optifine's to something else
+	IMappingProvider createMappings(String from, String to) {
 		//In dev
 		if (fabricLauncher.isDevelopment()) {
 			try {
 				File fullMappings = getDevMappings();
 				return (classMap, fieldMap, methodMap) -> {
 					RemapUtils.getTinyRemapper(fullMappings, from, to).load(classMap, fieldMap, methodMap);
-					fieldMap.entrySet().removeIf(e -> e.getValue().equals("CLOUDS") || e.getValue().equals("renderDistance"));
+
+					Map<String, String> extra = new HashMap<>();
+					Pattern regex = Pattern.compile("(\\w+)\\/(\\w+);;([\\w/;]+)");
+
+					for (Entry<String, String> entry : fieldMap.entrySet()) {
+						if ("CLOUDS".equals(entry.getValue())) {
+							Matcher matcher = regex.matcher(entry.getKey());
+							if (!matcher.matches()) throw new IllegalStateException("Couldn't match " + entry.getKey() + " => " + entry.getValue());
+							extra.put(matcher.group(1) + "/CLOUDS;;" + matcher.group(3), "CLOUDS_OF");
+						}
+
+						if ("renderDistance".equals(entry.getValue())) {
+							Matcher matcher = regex.matcher(entry.getKey());
+							if (!matcher.matches()) throw new IllegalStateException("Couldn't match " + entry.getKey() + " => " + entry.getValue());
+							extra.put(matcher.group(1) + "/renderDistance;;" + matcher.group(3), "renderDistance_OF");
+						}
+					}
+
+					fieldMap.putAll(extra);
 				};
 			} catch (Exception e) {
 				throw new RuntimeException(e);
@@ -111,6 +136,8 @@ public class OptifineSetup {
 
 		//In prod
 		Mappings mappingsNew = new Mappings() {
+			private final Mappings mappings = mappingConfiguration.getMappings();
+
 			@Override
 			public Collection<String> getNamespaces() {
 				return mappings.getNamespaces();
@@ -123,10 +150,31 @@ public class OptifineSetup {
 
 			@Override
 			public Collection<FieldEntry> getFieldEntries() {
-				return mappings.getFieldEntries().stream().filter(fieldEntry -> {
-					String name = fieldEntry.get("intermediary").getName();
-					return !(name.equals("field_1937") || name.equals("field_4062")); //Optifine isnt happy about these names
-				}).collect(Collectors.toList());
+				Collection<FieldEntry> fields = mappings.getFieldEntries();
+				List<FieldEntry> extra = new ArrayList<>();
+
+				for (FieldEntry field : fields) {
+					String interName = field.get("intermediary").getName();
+
+					//Option#CLOUDS
+					if ("field_1937".equals(interName)) {
+						extra.add(namespace -> {
+							EntryTriple real = field.get(namespace);
+							return new EntryTriple(real.getOwner(), "official".equals(namespace) ? "CLOUDS" : "CLOUDS_OF", real.getDesc());
+						});
+					}
+
+					//WorldRenderer#renderDistance
+					if ("field_4062".equals(interName)) {
+						extra.add(namespace -> {
+							EntryTriple real = field.get(namespace);
+							return new EntryTriple(real.getOwner(), "official".equals(namespace) ? "renderDistance" : "renderDistance_OF", real.getDesc());
+						});
+					}
+				}
+
+				fields.addAll(extra);
+				return fields;
 			}
 
 			@Override
@@ -145,7 +193,7 @@ public class OptifineSetup {
 			} catch (UrlConversionException e) {
 				throw new RuntimeException(e);
 			}
-		}).filter(path -> Files.exists(path)).collect(Collectors.toList());
+		}).filter(Files::exists).collect(Collectors.toList());
 	}
 
 	//Gets the offical minecraft jar

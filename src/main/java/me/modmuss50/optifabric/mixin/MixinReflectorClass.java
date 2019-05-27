@@ -19,10 +19,12 @@ public class MixinReflectorClass {
 	private boolean checked;
 
 	@Inject(method = "getTargetClass", at = @At("HEAD"), cancellable = true, remap = false)
-	public void getTargetClass(CallbackInfoReturnable<Class> infoReturnable) {
-		String name = targetClassName.replaceAll("/", ".");
-		if(name.startsWith("net.minecraft.launchwrapper") || name.startsWith("net.minecraftforge")){
-			checked = true;
+	public void getTargetClass(CallbackInfoReturnable<Class<?>> infoReturnable) {
+		if (!checked) {//Only check the target if it hasn't been done yet
+			String name = targetClassName.replaceAll("/", ".");
+			if (name.startsWith("net.minecraft.launchwrapper") || name.startsWith("net.minecraftforge") || "optifine.OptiFineClassTransformer".equals(name)) {
+				checked = true;
+			}
 		}
 	}
 
