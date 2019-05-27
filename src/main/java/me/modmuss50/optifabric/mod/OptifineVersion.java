@@ -57,12 +57,15 @@ public class OptifineVersion {
 	}
 
 	private static JarType getJarType(File file) throws IOException {
-		JarFile jarFile = new JarFile(file);
-		JarEntry jarEntry = jarFile.getJarEntry("Config.class"); // I hope this is enough to detect optifine
-		if (jarEntry == null) {
-			return JarType.SOMETHINGELSE;
+		ClassNode classNode;
+		try (JarFile jarFile = new JarFile(file)) {
+			JarEntry jarEntry = jarFile.getJarEntry("Config.class"); // I hope this is enough to detect optifine
+			if (jarEntry == null) {
+				return JarType.SOMETHINGELSE;
+			}
+			classNode = ASMUtils.asClassNode(jarEntry, jarFile);
 		}
-		ClassNode classNode = ASMUtils.asClassNode(jarEntry, jarFile);
+
 		for (FieldNode fieldNode : classNode.fields) {
 			if (fieldNode.name.equals("VERSION")) {
 				version = (String) fieldNode.value;
