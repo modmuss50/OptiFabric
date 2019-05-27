@@ -28,6 +28,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -150,13 +151,14 @@ public class OptifineSetup {
 			@Override
 			public Collection<FieldEntry> getFieldEntries() {
 				Collection<FieldEntry> fields = mappings.getFieldEntries();
+				List<FieldEntry> extra = new ArrayList<>();
 
 				for (FieldEntry field : fields) {
 					String interName = field.get("intermediary").getName();
 
 					//Option#CLOUDS
 					if ("field_1937".equals(interName)) {
-						fields.add(namespace -> {
+						extra.add(namespace -> {
 							EntryTriple real = field.get(namespace);
 							return new EntryTriple(real.getOwner(), "official".equals(namespace) ? "CLOUDS" : "CLOUDS_OF", real.getDesc());
 						});
@@ -164,13 +166,14 @@ public class OptifineSetup {
 
 					//WorldRenderer#renderDistance
 					if ("field_4062".equals(interName)) {
-						fields.add(namespace -> {
+						extra.add(namespace -> {
 							EntryTriple real = field.get(namespace);
 							return new EntryTriple(real.getOwner(), "official".equals(namespace) ? "renderDistance" : "renderDistance_OF", real.getDesc());
 						});
 					}
 				}
 
+				fields.addAll(extra);
 				return fields;
 			}
 
