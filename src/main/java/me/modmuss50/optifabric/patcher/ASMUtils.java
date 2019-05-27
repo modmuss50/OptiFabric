@@ -16,7 +16,7 @@ public class ASMUtils {
 	public static ClassNode readClassFromBytes(byte[] bytes) {
 		ClassNode classNode = new ClassNode();
 		ClassReader classReader = new ClassReader(bytes);
-		classReader.accept(classNode, 0);
+		classReader.accept(classNode, ClassReader.EXPAND_FRAMES);
 		return classNode;
 	}
 
