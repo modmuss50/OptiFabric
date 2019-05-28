@@ -7,12 +7,7 @@ import net.minecraft.client.gui.menu.YesNoScreen;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.SystemUtil;
 
-public class Optifabric implements ModInitializer {
-
-	@Override
-	public void onInitialize() {
-
-	}
+public class Optifabric {
 
 	public static void checkForErrors() {
 		if (OptifineVersion.error != null) {

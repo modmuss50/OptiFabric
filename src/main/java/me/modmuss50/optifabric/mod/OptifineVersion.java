@@ -1,15 +1,15 @@
 package me.modmuss50.optifabric.mod;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import me.modmuss50.optifabric.patcher.ASMUtils;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.MinecraftVersion;
+import net.minecraft.client.main.Main;
 import org.spongepowered.asm.lib.tree.ClassNode;
 import org.spongepowered.asm.lib.tree.FieldNode;
 import org.zeroturnaround.zip.ZipUtil;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -79,10 +79,22 @@ public class OptifineVersion {
 			return JarType.INCOMPATIBE;
 		}
 
-		//I hope this isnt too early
-		MinecraftVersion mcVersion = (MinecraftVersion) MinecraftVersion.create();
-		if (!mcVersion.getName().equals(minecraftVersion)) {
-			error = String.format("This version of optifine is not compatible with the current minecraft version\n\n Optifine requires %s you have %s", minecraftVersion, mcVersion.getName());
+		String currentMcVersion = "unknown";
+		try {
+			try(InputStream is = OptifineVersion.class.getResourceAsStream("/version.json")){
+				try(InputStreamReader isr = new InputStreamReader(is)){
+					JsonObject jsonObject = new Gson().fromJson(isr, JsonObject.class);
+					currentMcVersion = jsonObject.get("name").getAsString();
+				}
+			}
+		} catch (Exception e){
+			error = "Failed to find minecraft version";
+			e.printStackTrace();
+			return JarType.INCOMPATIBE;
+		}
+
+		if (!currentMcVersion.equals(minecraftVersion)) {
+			error = String.format("This version of optifine is not compatible with the current minecraft version\n\n Optifine requires %s you have %s", minecraftVersion, currentMcVersion);
 			return JarType.INCOMPATIBE;
 		}
 

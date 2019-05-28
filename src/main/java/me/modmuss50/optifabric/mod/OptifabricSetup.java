@@ -33,6 +33,15 @@ public class OptifabricSetup implements Runnable {
 		}
 
 		Mixins.addConfiguration("optifabric.optifine.mixins.json");
+
+		if(!FabricLoader.getInstance().isDevelopmentEnvironment() || getClass().getResource("OptiFabric-refmap.json") == null){
+			Mixins.addConfiguration("optifabric.mixins.json");
+		} else {
+			//In dev, with an intermediary named optifabric jar we can skip showing a nice crash screen
+			if(OptifineVersion.error != null){
+				throw new RuntimeException("Failed to setup optifine: " + OptifineVersion.error);
+			}
+		}
 	}
 
 }
