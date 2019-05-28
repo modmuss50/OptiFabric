@@ -56,18 +56,18 @@ public class OptifineSetup {
 		File optifineModJar = OptifineVersion.findOptifineJar();
 		inputHash = fileHash(optifineModJar.toPath());
 
+		File fabricOptifineJar = new File(workingDir, String.format("OptiFine-fabric-%s.jar", inputHash));
+		if (fabricOptifineJar.exists()) {
+			System.out.println("Found existing patched optifine jar, using that");
+			return fabricOptifineJar;
+		}
+
 		if (OptifineVersion.jarType == OptifineVersion.JarType.OPTFINE_INSTALLER) {
 			File optifineMod = new File(workingDir, String.format("OptiFine-mod-%s.jar", inputHash));
 			if (!optifineMod.exists()) {
 				OptifineInstaller.extract(optifineModJar, optifineMod, getMinecraftJar().toFile());
 			}
 			optifineModJar = optifineMod;
-		}
-
-		File fabricOptifineJar = new File(workingDir, String.format("OptiFine-fabric-%s.jar", inputHash));
-		if (fabricOptifineJar.exists()) {
-			System.out.println("Found existing patched optifine jar, using that");
-			return fabricOptifineJar;
 		}
 
 		System.out.println("Setting up optifine for the first time, this may take a few seconds.");
@@ -84,6 +84,18 @@ public class OptifineSetup {
 
 		PatchSplitter patcher = new PatchSplitter(remappedJar, fabricOptifineJar);
 		patcher.extractClasses(getClassesDir());
+
+		//We are done, lets get rid of the stuff we no longer need
+		lambadaFixJar.delete();
+		remappedJar.delete();
+		if(OptifineVersion.jarType == OptifineVersion.JarType.OPTFINE_INSTALLER){
+			optifineModJar.delete();
+		}
+
+		File extractedMappings = new File(workingDir, "mappings.tiny");
+		File fieldMappings = new File(workingDir, "mappings.full.tiny");
+		extractedMappings.delete();
+		fieldMappings.delete();
 
 		return fabricOptifineJar;
 	}
