@@ -8,17 +8,17 @@ __Note:__ This project does not contain Optifine, you must download it separatel
 
 ## Installing
 
-After installing fabric for 1.14, you will need to place the OptiFabric mod jar as well as the optifine installer in the mods folder.
+After installing fabric for 1.14.2, you will need to place the OptiFabric mod jar as well as the optifine installer in the mods folder.
 
 Fabric Loader should be the latest version from the [Fabric Website](https://fabricmc.net/use/)
 
-If you are using Fabric API version 0.2.7 is recommended, you can download it from [here](https://minecraft.curseforge.com/projects/fabric/files/2702281). Newer (0.3.0+) versions may have issues with shaders, a fix is being worked on.
+There are some known issues with FabricAPI such as shaders not working, and issues with water. These issues are being looked into.
 
 ## Links
 
 ### [OptiFabric Downloads](https://minecraft.curseforge.com/projects/optifabric)
 
-### [Optifine Download](https://optifine.net/downloads) (current 1.14 builds are under the preview section)
+### [Optifine Download](https://optifine.net/downloads) (current 1.14.2 builds are under the preview section)
 
 ## Issues
 
@@ -26,6 +26,14 @@ If you happen to find an issue and you believe it is to do with OptiFabric and n
 
 
 Note Fabric, Optifine and OptiFabric are still all in beta, so things will be broken.
+
+## For Mod Devs
+
+Optifabric 0.2 and up will work in a mod dev environment. Just install OptiFabric and Optifine in the mods folder.
+
+Class export can be enabled using the following VM Option, this will extract the overwritten classes to the .optifine folder, useful for debugging.
+
+`-Doptifabric.extract=true`
 
 ## Screenshots
 
