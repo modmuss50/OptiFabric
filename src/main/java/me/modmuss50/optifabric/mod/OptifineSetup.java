@@ -223,7 +223,7 @@ public class OptifineSetup {
 		}
 		if (fabricLauncher.isDevelopment()) {
 			Path path = entrypointResult.get().getParent();
-			Path minecraftJar = path.resolve("minecraft-1.14-client.jar"); //Lets hope you are using loom in dev
+			Path minecraftJar = path.resolve("minecraft-1.14.2-client.jar"); //Lets hope you are using loom in dev
 			if (!Files.exists(minecraftJar)) {
 				throw new FileNotFoundException("Could not find minecraft jar!");
 			}

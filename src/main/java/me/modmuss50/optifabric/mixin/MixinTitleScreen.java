@@ -2,8 +2,8 @@ package me.modmuss50.optifabric.mixin;
 
 import me.modmuss50.optifabric.mod.Optifabric;
 import me.modmuss50.optifabric.mod.OptifineVersion;
-import net.minecraft.client.gui.MainMenuScreen;
-import net.minecraft.client.gui.Screen;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.SystemUtil;
 import net.minecraft.util.math.MathHelper;
@@ -14,8 +14,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(MainMenuScreen.class)
-public abstract class MixinMainMenuScreen extends Screen {
+@Mixin(TitleScreen.class)
+public abstract class MixinTitleScreen extends Screen {
 
 	@Shadow
 	@Final
@@ -24,7 +24,7 @@ public abstract class MixinMainMenuScreen extends Screen {
 	@Shadow
 	private long backgroundFadeStart;
 
-	protected MixinMainMenuScreen(Component component_1) {
+	protected MixinTitleScreen(Component component_1) {
 		super(component_1);
 	}
 
