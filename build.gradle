@@ -1,6 +1,17 @@
-plugins {
-	id 'fabric-loom' version '0.2.2-SNAPSHOT'
+buildscript {
+	repositories {
+		jcenter()
+		maven {
+			name = 'Fabric'
+			url = 'https://maven.fabricmc.net/'
+		}
+	}
+	dependencies {
+		classpath "net.fabricmc:fabric-loom:0.2.3-SNAPSHOT"
+	}
 }
+
+apply plugin: net.fabricmc.loom.LoomGradlePlugin
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
@@ -40,8 +51,64 @@ dependencies {
 	compile ('net.fabricmc:stitch:0.1.2.49+') {
 		transitive = false
 	}
-	include ('net.fabricmc:stitch:0.1.2.49+')
+	include 'net.fabricmc:stitch:0.1.2.49+'
 }
+
+import groovy.json.JsonOutput
+import groovy.json.JsonSlurper
+
+task unzip(type: Copy) {
+	def zipFile = file("${project.buildDir}/libs/${archivesBaseName}-${version}.jar")
+	def outputDir = file("${buildDir}/unpacked/dist")
+
+	if(outputDir.exists()){
+		outputDir.deleteDir()
+	}
+
+	from zipTree(zipFile)
+	into outputDir
+}
+
+task modevJar (type: Jar, dependsOn: unzip) {
+	classifier = 'moddev'
+
+	def tempFile = file("${buildDir}/temp/fabric.mod.json")
+	tempFile.mkdirs()
+	tempFile.delete()
+	
+	def json = new JsonSlurper().parseText(file("src/main/resources/fabric.mod.json").text)
+	json.jars = configurations.include.resolve().stream().map{f -> new FileHolder("META-INF/jars/" + f.getName())}.toArray()
+	tempFile.write JsonOutput.toJson(json)
+	from tempFile
+	
+	from (sourceSets.main.output) {
+		exclude "fabric.mod.json"
+		exclude '*.jar'
+	}
+}
+
+afterEvaluate { project ->
+	projects.logger.lifecycle("hi")
+	project.configurations.include.resolve().stream().forEach{f ->
+		def file = file("${buildDir}/unpacked/dist/META-INF/jars/${f.getName()}")
+		projects.logger.lifecycle(file.getName() + ":" + f.getName())
+		modevJar.from (file) {
+			into ("META-INF/jars")
+		}
+	}
+}
+
+
+class FileHolder {
+	String file
+
+	FileHolder(String file) {
+		this.file = file
+	}
+}
+
+modevJar.dependsOn remapJar
+build.dependsOn modevJar
 
 processResources {
 	inputs.property "version", project.version
