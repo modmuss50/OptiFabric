@@ -10,12 +10,12 @@ import java.net.URLClassLoader;
 //A class used to extract the optifine jar from the installer
 public class OptifineInstaller {
 
-	public static void extract(File installer, File output, File minecrafJar) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, MalformedURLException {
+	public static void extract(File installer, File output, File minecraftJar) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, MalformedURLException {
 		System.out.println("Running optifine patcher");
 		ClassLoader classLoader = new URLClassLoader(new URL[]{installer.toURI().toURL()}, OptifineInstaller.class.getClassLoader());
 		Class clazz = classLoader.loadClass("optifine.Patcher");
 		Method method = clazz.getDeclaredMethod("process", File.class, File.class, File.class);
-		method.invoke(null, minecrafJar, installer, output);
+		method.invoke(null, minecraftJar, installer, output);
 	}
 
 }

@@ -46,8 +46,7 @@ public class OptifineSetup {
 
 		byte[] modHash = fileHash(optifineModJar);
 
-		String optifineVersion = OptifineVersion.version;
-		versionDir = new File(workingDir, optifineVersion);
+		versionDir = new File(workingDir, OptifineVersion.version);
 		if (!versionDir.exists()) {
 			versionDir.mkdirs();
 		}
@@ -223,7 +222,7 @@ public class OptifineSetup {
 		}
 		if (fabricLauncher.isDevelopment()) {
 			Path path = entrypointResult.get().getParent();
-			Path minecraftJar = path.resolve("minecraft-1.14-client.jar"); //Lets hope you are using loom in dev
+			Path minecraftJar = path.resolve(String.format("minecraft-%s-client.jar", OptifineVersion.minecraftVersion)); //Lets hope you are using loom in dev
 			if (!Files.exists(minecraftJar)) {
 				throw new FileNotFoundException("Could not find minecraft jar!");
 			}
