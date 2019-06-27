@@ -5,7 +5,7 @@ import me.modmuss50.optifabric.mod.OptifineVersion;
 
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.TitleScreen;
-import net.minecraft.network.chat.Component;
+import net.minecraft.text.Text;
 import net.minecraft.util.SystemUtil;
 import net.minecraft.util.math.MathHelper;
 import org.spongepowered.asm.mixin.Final;
@@ -25,7 +25,7 @@ public abstract class MixinTitleScreen extends Screen {
 	@Shadow
 	private long backgroundFadeStart;
 
-	protected MixinTitleScreen(Component component_1) {
+	protected MixinTitleScreen(Text component_1) {
 		super(component_1);
 	}
 

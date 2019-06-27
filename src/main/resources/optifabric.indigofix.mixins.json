@@ -3,7 +3,8 @@
   "package": "me.modmuss50.optifabric.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "MixinChunkCacheOF"
+    "MixinChunkCacheOF",
+    "MixinIndigo"
   ],
   "injectors": {
     "defaultRequire": 1

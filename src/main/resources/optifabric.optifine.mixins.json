@@ -3,7 +3,9 @@
   "package": "me.modmuss50.optifabric.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "MixinReflectorClass"
+    "MixinReflectorClass",
+    "MixinShaders",
+    "MixinGuiShaders"
   ],
   "injectors": {
     "defaultRequire": 1

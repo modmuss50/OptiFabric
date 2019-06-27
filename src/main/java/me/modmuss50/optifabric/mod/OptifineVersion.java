@@ -59,7 +59,7 @@ public class OptifineVersion {
 	private static JarType getJarType(File file) throws IOException {
 		ClassNode classNode;
 		try (JarFile jarFile = new JarFile(file)) {
-			JarEntry jarEntry = jarFile.getJarEntry("Config.class"); // I hope this is enough to detect optifine
+			JarEntry jarEntry = jarFile.getJarEntry("net/optifine/Config.class"); // New 1.14.3 location
 			if (jarEntry == null) {
 				return JarType.SOMETHINGELSE;
 			}

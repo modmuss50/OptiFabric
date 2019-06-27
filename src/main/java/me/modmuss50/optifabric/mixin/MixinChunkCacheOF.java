@@ -22,7 +22,7 @@ public abstract class MixinChunkCacheOF implements AccessChunkRendererRegion {
 	private ChunkRendererRegion chunkCache;
 
 	//This was taken from https://github.com/FabricMC/fabric/blob/master/fabric-renderer-indigo/src/main/java/net/fabricmc/indigo/renderer/mixin/MixinChunkRenderTask.java honesly no idea what it does, but it doesnt crash the game here
-	@Inject(method = "<init>", at = @At("RETURN"))
+	@Inject(method = "<init>", at = @At("RETURN"), remap = false)
 	private void constructor(ChunkRendererRegion chunkCache, BlockPos posFromIn, BlockPos posToIn, int subIn, CallbackInfo info){
 		if(chunkCache != null) {
 			final TerrainRenderContext renderer  = TerrainRenderContext.POOL.get();
