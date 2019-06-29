@@ -48,10 +48,10 @@ dependencies {
 	include 'org.slf4j:slf4j-api:1.7.26'
 
 	//Used only in dev to generate the field names
-	compile ('net.fabricmc:stitch:0.1.2.49+') {
+	compile ('net.fabricmc:stitch:0.2.1.61') {
 		transitive = false
 	}
-	include 'net.fabricmc:stitch:0.1.2.49+'
+	include 'net.fabricmc:stitch:0.2.1.61'
 }
 
 import groovy.json.JsonOutput

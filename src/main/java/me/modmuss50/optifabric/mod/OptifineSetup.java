@@ -271,7 +271,7 @@ public class OptifineSetup {
 		if (fieldMappings.exists()) {
 			fieldMappings.delete();
 		}
-		fieldNames.run(new String[]{getMinecraftJar().normalize().toString(), extractMappings().getAbsolutePath(), fieldMappings.getAbsolutePath(), "--writeAll"});
+		fieldNames.run(new String[]{getMinecraftJar().normalize().toString(), extractMappings().getAbsolutePath(), fieldMappings.getAbsolutePath()});
 		return fieldMappings;
 	}
 
