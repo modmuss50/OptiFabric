@@ -18,7 +18,7 @@
   ],
   "license": "CC0-1.0",
   "icon": "assets/optifabric/icon.png",
-  "environment": "*",
+  "environment": "client",
   "entrypoints": {
     "main": [
       "me.modmuss50.optifabric.mod.Optifabric"
