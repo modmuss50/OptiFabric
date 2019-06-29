@@ -18,7 +18,7 @@
   ],
   "license": "CC0-1.0",
   "icon": "assets/optifabric/icon.png",
-  "environment": "*",
+  "environment": "client",
   "custom": {
     "mm:early_risers": [
       "me.modmuss50.optifabric.mod.OptifabricSetup"
