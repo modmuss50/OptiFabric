@@ -5,7 +5,8 @@
   "mixins": [
     "MixinReflectorClass",
     "MixinShaders",
-    "MixinGuiShaders"
+    "MixinGuiShaders",
+    "MixinScreen"
   ],
   "injectors": {
     "defaultRequire": 1
