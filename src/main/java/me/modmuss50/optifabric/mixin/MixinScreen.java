@@ -1,6 +1,5 @@
 package me.modmuss50.optifabric.mixin;
 
-import me.modmuss50.optifabric.mod.ShaderHelper;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawableHelper;
@@ -35,7 +34,7 @@ public class MixinScreen extends DrawableHelper {
 
 		}
 		boolean enabled = RENDER_REGIONS.getMessage(MinecraftClient.getInstance().options).endsWith("ON");
-		if(!ShaderHelper.isShadersEnabled() && enabled){
+		if(enabled){
 			drawString(font, "OptiFabric: Render Regions is not supported!", 10, 5, Color.RED.getRGB());
 		}
 	}

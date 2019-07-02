@@ -4,8 +4,6 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "MixinReflectorClass",
-    "MixinShaders",
-    "MixinGuiShaders",
     "MixinScreen"
   ],
   "injectors": {

@@ -21,7 +21,6 @@ public class ClassCache {
 	}
 
 	public void addClass(String name, byte[] bytes){
-		System.out.println("add: " + name);
 		if(classes.containsKey(name)){
 			throw new UnsupportedOperationException(name + " is already in ClassCache");
 		}

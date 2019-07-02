@@ -88,7 +88,6 @@ task modevJar (type: Jar, dependsOn: unzip) {
 }
 
 afterEvaluate { project ->
-	projects.logger.lifecycle("hi")
 	project.configurations.include.resolve().stream().forEach{f ->
 		def file = file("${buildDir}/unpacked/dist/META-INF/jars/${f.getName()}")
 		projects.logger.lifecycle(file.getName() + ":" + f.getName())

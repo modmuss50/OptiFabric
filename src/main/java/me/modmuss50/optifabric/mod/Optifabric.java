@@ -1,12 +1,11 @@
 package me.modmuss50.optifabric.mod;
 
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ConfirmScreen;
-import net.minecraft.util.SystemUtil;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.SystemUtil;
 
 public class Optifabric implements ModInitializer {
 
@@ -26,8 +25,6 @@ public class Optifabric implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-		if(FabricLoader.getInstance().isModLoaded("fabric-renderer-indigo")){
-			ShaderHelper.indigoFixSetup();
-		}
+
 	}
 }
