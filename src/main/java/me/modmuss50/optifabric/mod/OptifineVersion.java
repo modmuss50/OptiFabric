@@ -15,7 +15,7 @@ import java.util.jar.JarFile;
 
 public class OptifineVersion {
 
-	public static String error = null;
+
 	public static String version;
 	public static String minecraftVersion;
 	public static JarType jarType;
@@ -34,11 +34,11 @@ public class OptifineVersion {
 				if (file.getName().endsWith(".jar")) {
 					JarType type = getJarType(file);
 					if (type.error) {
-						throw new RuntimeException("An error occurred when trying to find the optifine jar: " + error);
+						throw new RuntimeException("An error occurred when trying to find the optifine jar: " + type.name());
 					}
 					if (type == JarType.OPIFINE_MOD || type == JarType.OPTFINE_INSTALLER) {
 						if(optifineJar != null){
-							error = "Found 2 or more optifine jars, please ensure you only have 1 copy of optifine in the mods folder!";
+							OptifabricError.setError("Found 2 or more optifine jars, please ensure you only have 1 copy of optifine in the mods folder!");
 							throw new FileNotFoundException("Multiple optifine jars");
 						}
 						jarType = type;
@@ -52,7 +52,7 @@ public class OptifineVersion {
 			return optifineJar;
 		}
 
-		error = "OptiFabric could not find the Optifine jar in the mods folder.";
+		OptifabricError.setError("OptiFabric could not find the Optifine jar in the mods folder.");
 		throw new FileNotFoundException("Could not find optifine jar");
 	}
 
@@ -88,13 +88,13 @@ public class OptifineVersion {
 				}
 			}
 		} catch (Exception e){
-			error = "Failed to find minecraft version";
+			OptifabricError.setError("Failed to find minecraft version");
 			e.printStackTrace();
 			return JarType.INCOMPATIBE;
 		}
 
 		if (!currentMcVersion.equals(minecraftVersion)) {
-			error = String.format("This version of optifine is not compatible with the current minecraft version\n\n Optifine requires %s you have %s", minecraftVersion, currentMcVersion);
+			OptifabricError.setError(String.format("This version of optifine is not compatible with the current minecraft version\n\n Optifine requires %s you have %s", minecraftVersion, currentMcVersion));
 			return JarType.INCOMPATIBE;
 		}
 

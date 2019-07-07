@@ -10,14 +10,14 @@ import net.minecraft.util.SystemUtil;
 public class Optifabric implements ModInitializer {
 
 	public static void checkForErrors() {
-		if (OptifineVersion.error != null) {
+		if (OptifabricError.hasError()) {
 			ConfirmScreen confirmScreen = new ConfirmScreen(t -> {
 				if (t) {
-					SystemUtil.getOperatingSystem().open("https://github.com/modmuss50/OptiFabric/blob/master/README.md");
+					SystemUtil.getOperatingSystem().open(OptifabricError.getErrorURL());
 				} else {
 					MinecraftClient.getInstance().scheduleStop();
 				}
-			}, new LiteralText(Formatting.RED + "There was an error finding Optifine in the mods folder!"), new LiteralText(OptifineVersion.error), Formatting.GREEN + "Open Help", Formatting.RED + "Close Game");
+			}, new LiteralText(Formatting.RED + "There was an error loading OptiFabric!"), new LiteralText(OptifabricError.getError()), Formatting.GREEN + OptifabricError.getHelpButtonText(), Formatting.RED + "Close Game");
 
 			MinecraftClient.getInstance().openScreen(confirmScreen);
 		}

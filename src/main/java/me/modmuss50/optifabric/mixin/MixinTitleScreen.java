@@ -1,6 +1,7 @@
 package me.modmuss50.optifabric.mixin;
 
 import me.modmuss50.optifabric.mod.Optifabric;
+import me.modmuss50.optifabric.mod.OptifabricError;
 import me.modmuss50.optifabric.mod.OptifineVersion;
 
 import net.minecraft.client.gui.screen.Screen;
@@ -36,7 +37,7 @@ public abstract class MixinTitleScreen extends Screen {
 
 	@Inject(method = "render", at = @At("RETURN"))
 	private void render(int int_1, int int_2, float float_1, CallbackInfo info) {
-		if (OptifineVersion.error == null) {
+		if (!OptifabricError.hasError()) {
 			float fadeTime = this.doBackgroundFade ? (float) (SystemUtil.getMeasuringTimeMs() - this.backgroundFadeStart) / 1000.0F : 1.0F;
 			float fadeColor = this.doBackgroundFade ? MathHelper.clamp(fadeTime - 1.0F, 0.0F, 1.0F) : 1.0F;
 
