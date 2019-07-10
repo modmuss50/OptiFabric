@@ -12,6 +12,8 @@ After installing fabric for 1.14.3, you will need to place the OptiFabric mod ja
 
 Fabric Loader should be the latest version from the [Fabric Website](https://fabricmc.net/use/)
 
+If you need more help you can read a more detailed guide [here](https://github.com/modmuss50/OptiFabric/wiki/Install-Tutorial)
+
 
 ## Links
 
