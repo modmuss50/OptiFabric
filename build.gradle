@@ -35,9 +35,9 @@ dependencies {
 	modCompile "net.fabricmc:fabric-loader:${project.loader_version}"
 
 	modCompile 'net.fabricmc.fabric-api:fabric-api:0.3.0+build.191'
-
-	modCompile 'com.github.Chocohead:Fabric-ASM:c4ad22d'
-	include 'com.github.Chocohead:Fabric-ASM:c4ad22d'
+	
+	modCompile 'com.github.Chocohead:Fabric-ASM:9af0ebe992'
+	include 'com.github.Chocohead:Fabric-ASM:9af0ebe992'
 
 	//Used to handle the zip processing
 	compile 'org.zeroturnaround:zt-zip:1.13'
@@ -54,9 +54,6 @@ dependencies {
 	include 'net.fabricmc:stitch:0.2.1.61'
 }
 
-import groovy.json.JsonOutput
-import groovy.json.JsonSlurper
-
 task unzip(type: Copy) {
 	def zipFile = file("${project.buildDir}/libs/${archivesBaseName}-${version}.jar")
 	def outputDir = file("${buildDir}/unpacked/dist")
@@ -68,46 +65,6 @@ task unzip(type: Copy) {
 	from zipTree(zipFile)
 	into outputDir
 }
-
-task modevJar (type: Jar, dependsOn: unzip) {
-	classifier = 'moddev'
-
-	def tempFile = file("${buildDir}/temp/fabric.mod.json")
-	tempFile.mkdirs()
-	tempFile.delete()
-	
-	def json = new JsonSlurper().parseText(file("src/main/resources/fabric.mod.json").text)
-	json.jars = configurations.include.resolve().stream().map{f -> new FileHolder("META-INF/jars/" + f.getName())}.toArray()
-	tempFile.write JsonOutput.toJson(json)
-	from tempFile
-	
-	from (sourceSets.main.output) {
-		exclude "fabric.mod.json"
-		exclude '*.jar'
-	}
-}
-
-afterEvaluate { project ->
-	project.configurations.include.resolve().stream().forEach{f ->
-		def file = file("${buildDir}/unpacked/dist/META-INF/jars/${f.getName()}")
-		projects.logger.lifecycle(file.getName() + ":" + f.getName())
-		modevJar.from (file) {
-			into ("META-INF/jars")
-		}
-	}
-}
-
-
-class FileHolder {
-	String file
-
-	FileHolder(String file) {
-		this.file = file
-	}
-}
-
-modevJar.dependsOn remapJar
-build.dependsOn modevJar
 
 processResources {
 	inputs.property "version", project.version

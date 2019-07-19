@@ -2,6 +2,7 @@ package me.modmuss50.optifabric.mod;
 
 import com.chocohead.mm.api.ClassTinkerers;
 import me.modmuss50.optifabric.patcher.ASMUtils;
+import me.modmuss50.optifabric.patcher.ChunkRendererFix;
 import me.modmuss50.optifabric.patcher.ClassCache;
 import net.fabricmc.loader.api.FabricLoader;
 import org.objectweb.asm.Opcodes;
@@ -21,11 +22,15 @@ public class OptifineInjector {
 
 	ClassCache classCache;
 
+	String chunkRenderer;
+
 	public OptifineInjector(ClassCache classCache) {
 		this.classCache = classCache;
 	}
 
 	public void setup() throws IOException {
+		chunkRenderer = FabricLoader.getInstance().getMappingResolver().mapClassName("intermediary", "net.minecraft.class_851").replaceAll("\\.", "/");
+
 		classCache.getClasses().forEach(s -> ClassTinkerers.addTransformation(s.replaceAll("/", ".").substring(0, s.length() - 6), transformer));
 	}
 
@@ -34,6 +39,12 @@ public class OptifineInjector {
 
 		//I cannot imagine this being very good at all
 		ClassNode source = getSourceClassNode(target);
+
+		//Patch the class to fix
+		if(target.name.equals(chunkRenderer)){
+			ChunkRendererFix.fix(source);
+		}
+
 		target.methods = source.methods;
 		target.fields = source.fields;
 		target.interfaces = source.interfaces;
