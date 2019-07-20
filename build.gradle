@@ -34,7 +34,7 @@ dependencies {
 	mappings "net.fabricmc:yarn:${project.yarn_mappings}"
 	modCompile "net.fabricmc:fabric-loader:${project.loader_version}"
 
-	modCompile 'net.fabricmc.fabric-api:fabric-api:0.3.0+build.191'
+	modCompile 'net.fabricmc.fabric-api:fabric-api:0.3.0+build.200'
 	
 	modCompile 'com.github.Chocohead:Fabric-ASM:9af0ebe992'
 	include 'com.github.Chocohead:Fabric-ASM:9af0ebe992'
