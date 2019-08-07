@@ -18,6 +18,7 @@ import net.fabricmc.tinyremapper.IMappingProvider;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.tuple.Pair;
+import org.zeroturnaround.zip.ZipUtil;
 
 import java.io.*;
 import java.net.URL;
@@ -80,28 +81,73 @@ public class OptifineSetup {
 
 		System.out.println("Setting up optifine for the first time, this may take a few seconds.");
 
+		//A jar without srgs
+		File jarOfTheFree = new File(versionDir, "/Optifine-jarofthefree.jar");
+		List<String> srgs = new ArrayList<>();
+
+		System.out.println("De-Volderfiying jar");
+
+		//Find all the SRG named classes and remove them
+		ZipUtil.iterate(optifineModJar, (in, zipEntry) -> {
+			String name = zipEntry.getName();
+			if(name.startsWith("com/mojang/blaze3d/platform/")){
+				if(name.contains("$")){
+					String[] split = name.replace(".class", "").split("\\$");
+					if(split.length >= 2){
+						if(split[1].length() > 2){
+							srgs.add(name);
+						}
+					}
+				}
+			}
+
+			if(name.startsWith("srg/") || name.startsWith("net/minecraft/")){
+				srgs.add(name);
+			}
+		});
+
+		if(jarOfTheFree.exists()){
+			jarOfTheFree.delete();
+		}
+
+		ZipUtil.removeEntries(optifineModJar, srgs.toArray(new String[0]), jarOfTheFree);
+
 		System.out.println("Building lambada fix mappings");
-		LambadaRebuiler rebuiler = new LambadaRebuiler(optifineModJar, getMinecraftJar().toFile());
+		LambadaRebuiler rebuiler = new LambadaRebuiler(jarOfTheFree, getMinecraftJar().toFile());
 		rebuiler.buildLambadaMap();
 
 		System.out.println("Remapping optifine with fixed lambada names");
 		File lambadaFixJar = new File(versionDir, "/Optifine-lambadafix.jar");
-		RemapUtils.mapJar(lambadaFixJar.toPath(), optifineModJar.toPath(), rebuiler, getLibs());
+		RemapUtils.mapJar(lambadaFixJar.toPath(), jarOfTheFree.toPath(), rebuiler, getLibs());
 
 		remapOptifine(lambadaFixJar.toPath(), remappedJar);
 
 		classCache = PatchSplitter.generateClassCache(remappedJar, optifinePatches, modHash);
 
-		//We are done, lets get rid of the stuff we no longer need
-		lambadaFixJar.delete();
-		if(OptifineVersion.jarType == OptifineVersion.JarType.OPTFINE_INSTALLER){
-			optifineModJar.delete();
+		if(true){
+			//We are done, lets get rid of the stuff we no longer need
+			lambadaFixJar.delete();
+			jarOfTheFree.delete();
+
+			if(OptifineVersion.jarType == OptifineVersion.JarType.OPTFINE_INSTALLER){
+				optifineModJar.delete();
+			}
+
+			File extractedMappings = new File(versionDir, "mappings.tiny");
+			File fieldMappings = new File(versionDir, "mappings.full.tiny");
+			extractedMappings.delete();
+			fieldMappings.delete();
 		}
 
-		File extractedMappings = new File(versionDir, "mappings.tiny");
-		File fieldMappings = new File(versionDir, "mappings.full.tiny");
-		extractedMappings.delete();
-		fieldMappings.delete();
+		boolean extractClasses = Boolean.parseBoolean(System.getProperty("optifabric.extract", "false"));
+		if(extractClasses){
+			System.out.println("Extracting optifine classes");
+			File optifineClasses = new File(versionDir, "optifine-classes");
+			if(optifineClasses.exists()){
+				FileUtils.deleteDirectory(optifineClasses);
+			}
+			ZipUtil.unpack(remappedJar, optifineClasses);
+		}
 
 		return Pair.of(remappedJar, classCache);
 	}
