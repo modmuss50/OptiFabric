@@ -9,14 +9,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
-
     - name: Set up JDK 1.8
       uses: actions/setup-java@v1
       with:
         java-version: 1.8
-
-    - name: Setup gradle
-        run: chmod +x gradlew
-
     - name: Build with Gradle
-      run: ./gradlew build
+      run: |
+        chmod +x gradlew
+        ./gradlew build
