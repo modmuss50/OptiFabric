@@ -28,9 +28,25 @@ If you happen to find an issue and you believe it is to do with OptiFabric and n
 
 ## For Mod Devs
 
-(Needs testing please report issues)
+Add the following to your build.gradle
 
-Optifabric 0.2 and up will work in a mod dev environment. Just install OptiFabric and Optifine in the mods folder.
+```groovy
+repositories {
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    modCompile 'com.github.modmuss50:OptiFabric:e1834b016f'
+
+    //Deps required for optifabric
+    compile 'org.zeroturnaround:zt-zip:1.13'
+    compile ('net.fabricmc:stitch:0.2.1.61') {
+        transitive = false
+    }
+} 
+```
+
+Put the standard Optifine jar in /run/mods
 
 Class export can be enabled using the following VM Option, this will extract the overwritten classes to the .optifine folder, useful for debugging.
 
