@@ -23,6 +23,7 @@ public class OptifineInjector {
 	ClassCache classCache;
 
 	String chunkRenderer;
+	String particleManager;
 
 	public OptifineInjector(ClassCache classCache) {
 		this.classCache = classCache;
@@ -30,6 +31,7 @@ public class OptifineInjector {
 
 	public void setup() throws IOException {
 		chunkRenderer = FabricLoader.getInstance().getMappingResolver().mapClassName("intermediary", "net.minecraft.class_851").replaceAll("\\.", "/");
+		particleManager = FabricLoader.getInstance().getMappingResolver().mapClassName("intermediary", "net.minecraft.class_702").replaceAll("\\.", "/");
 
 		classCache.getClasses().forEach(s -> ClassTinkerers.addTransformation(s.replaceAll("/", ".").substring(0, s.length() - 6), transformer));
 	}
@@ -43,6 +45,11 @@ public class OptifineInjector {
 		//Patch the class to fix
 		if(target.name.equals(chunkRenderer)){
 			ChunkRendererFix.fix(source);
+		}
+
+		//Skip applying incompatible ParticleManager changes
+		if(target.name.equals(particleManager)){
+			return;
 		}
 
 		target.methods = source.methods;
