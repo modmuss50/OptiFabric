@@ -12,6 +12,9 @@ import net.fabricmc.loader.launch.knot.Knot;
 import net.fabricmc.loader.util.UrlConversionException;
 import net.fabricmc.loader.util.UrlUtil;
 import net.fabricmc.loader.util.mappings.TinyRemapperMappingsHelper;
+import net.fabricmc.mapping.reader.v2.TinyMetadata;
+import net.fabricmc.mapping.tree.ClassDef;
+import net.fabricmc.mapping.tree.TinyTree;
 import net.fabricmc.mappings.*;
 import net.fabricmc.stitch.commands.CommandProposeFieldNames;
 import net.fabricmc.tinyremapper.IMappingProvider;
@@ -168,27 +171,12 @@ public class OptifineSetup {
 		if (fabricLauncher.isDevelopment()) {
 			try {
 				File fullMappings = getDevMappings();
-				return (classMap, fieldMap, methodMap) -> {
-					RemapUtils.getTinyRemapper(fullMappings, from, to).load(classMap, fieldMap, methodMap);
-
-					Map<String, String> extra = new HashMap<>();
-					Pattern regex = Pattern.compile("(\\w+)\\/(\\w+);;([\\w/;]+)");
-
-					for (Entry<String, String> entry : fieldMap.entrySet()) {
-						if ("CLOUDS".equals(entry.getValue())) {
-							Matcher matcher = regex.matcher(entry.getKey());
-							if (!matcher.matches()) throw new IllegalStateException("Couldn't match " + entry.getKey() + " => " + entry.getValue());
-							extra.put(matcher.group(1) + "/CLOUDS;;" + matcher.group(3), "CLOUDS_OF");
-						}
-
-						if ("renderDistance".equals(entry.getValue())) {
-							Matcher matcher = regex.matcher(entry.getKey());
-							if (!matcher.matches()) throw new IllegalStateException("Couldn't match " + entry.getKey() + " => " + entry.getValue());
-							extra.put(matcher.group(1) + "/renderDistance;;" + matcher.group(3), "renderDistance_OF");
-						}
-					}
-
-					fieldMap.putAll(extra);
+				return (out) -> {
+					RemapUtils.getTinyRemapper(fullMappings, from, to).load(out);
+					out.acceptField(new IMappingProvider.Member("cyf", "CLOUDS", "Lcxt;"),
+							"CLOUDS_OF");
+					out.acceptField(new IMappingProvider.Member("dng", "renderDistance", "I"),
+							"renderDistance_OF");
 				};
 			} catch (Exception e) {
 				throw new RuntimeException(e);
@@ -196,51 +184,22 @@ public class OptifineSetup {
 		}
 
 		//In prod
-		Mappings mappingsNew = new Mappings() {
-			private final Mappings mappings = mappingConfiguration.getMappings();
+		TinyTree mappingsNew = new TinyTree() {
+			private final TinyTree mappings = mappingConfiguration.getMappings();
 
 			@Override
-			public Collection<String> getNamespaces() {
-				return mappings.getNamespaces();
+			public TinyMetadata getMetadata() {
+				return mappings.getMetadata();
 			}
 
 			@Override
-			public Collection<ClassEntry> getClassEntries() {
-				return mappings.getClassEntries();
+			public Map<String, ClassDef> getDefaultNamespaceClassMap() {
+				return mappings.getDefaultNamespaceClassMap();
 			}
 
 			@Override
-			public Collection<FieldEntry> getFieldEntries() {
-				Collection<FieldEntry> fields = mappings.getFieldEntries();
-				List<FieldEntry> extra = new ArrayList<>();
-
-				for (FieldEntry field : fields) {
-					String interName = field.get("intermediary").getName();
-
-					//Option#CLOUDS
-					if ("field_1937".equals(interName)) {
-						extra.add(namespace -> {
-							EntryTriple real = field.get(namespace);
-							return new EntryTriple(real.getOwner(), "official".equals(namespace) ? "CLOUDS" : "CLOUDS_OF", real.getDesc());
-						});
-					}
-
-					//WorldRenderer#renderDistance
-					if ("field_4062".equals(interName)) {
-						extra.add(namespace -> {
-							EntryTriple real = field.get(namespace);
-							return new EntryTriple(real.getOwner(), "official".equals(namespace) ? "renderDistance" : "renderDistance_OF", real.getDesc());
-						});
-					}
-				}
-
-				fields.addAll(extra);
-				return fields;
-			}
-
-			@Override
-			public Collection<MethodEntry> getMethodEntries() {
-				return mappings.getMethodEntries();
+			public Collection<ClassDef> getClasses() {
+				return mappings.getClasses();
 			}
 		};
 		return TinyRemapperMappingsHelper.create(mappingsNew, from, to);
