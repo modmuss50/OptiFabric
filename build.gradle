@@ -7,7 +7,7 @@ buildscript {
 		}
 	}
 	dependencies {
-		classpath "net.fabricmc:fabric-loom:0.2.5-SNAPSHOT"
+		classpath "net.fabricmc:fabric-loom:0.2.6-SNAPSHOT"
 	}
 }
 
@@ -35,24 +35,24 @@ dependencies {
 	mappings "net.fabricmc:yarn:${project.yarn_mappings}"
 	modCompile "net.fabricmc:fabric-loader:${project.loader_version}"
 
-	modCompile 'net.fabricmc.fabric-api:fabric-api:0.3.0+build.200'
+	modCompile "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 	
-	modCompile 'com.github.Chocohead:Fabric-ASM:9af0ebe992'
-	include 'com.github.Chocohead:Fabric-ASM:9af0ebe992'
+	modCompile "com.github.Chocohead:Fabric-ASM:${project.fabric_asm_version}"
+	include "com.github.Chocohead:Fabric-ASM:${project.fabric_asm_version}"
 
 	//Used to handle the zip processing
-	compile 'org.zeroturnaround:zt-zip:1.13'
-	include 'org.zeroturnaround:zt-zip:1.13'
+	compile "org.zeroturnaround:zt-zip:${project.zt_zip_version}"
+	include "org.zeroturnaround:zt-zip:${project.zt_zip_version}"
 
 	//Required for zt-zip, kinda annoying
-	include 'org.slf4j:slf4j-simple:1.7.26'
-	include 'org.slf4j:slf4j-api:1.7.26'
+	include "org.slf4j:slf4j-simple:${project.slf4j_version}"
+	include "org.slf4j:slf4j-api:${project.slf4j_version}"
 
 	//Used only in dev to generate the field names
-	compile ('net.fabricmc:stitch:0.2.1.61') {
+	compile ("net.fabricmc:stitch:${project.stitch_version}") {
 		transitive = false
 	}
-	include 'net.fabricmc:stitch:0.2.1.61'
+	include "net.fabricmc:stitch:${project.stitch_version}"
 }
 
 task unzip(type: Copy) {

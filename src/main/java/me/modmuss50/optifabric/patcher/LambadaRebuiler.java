@@ -94,7 +94,7 @@ public class LambadaRebuiler implements IMappingProvider {
 	}
 
 	@Override
-	public void load(Map<String, String> classMap, Map<String, String> fieldMap, Map<String, String> methodMap) {
+	public void load(MappingAcceptor out) {
 		methodMap.putAll(this.methodMap);
 	}
 }
