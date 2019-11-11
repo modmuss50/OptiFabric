@@ -15,8 +15,6 @@ import net.fabricmc.loader.util.mappings.TinyRemapperMappingsHelper;
 import net.fabricmc.mapping.reader.v2.TinyMetadata;
 import net.fabricmc.mapping.tree.ClassDef;
 import net.fabricmc.mapping.tree.TinyTree;
-import net.fabricmc.mappings.*;
-import net.fabricmc.stitch.commands.CommandProposeFieldNames;
 import net.fabricmc.tinyremapper.IMappingProvider;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
@@ -170,7 +168,7 @@ public class OptifineSetup {
 		//In dev
 		if (fabricLauncher.isDevelopment()) {
 			try {
-				File fullMappings = getDevMappings();
+				File fullMappings = extractMappings();
 				return (out) -> {
 					RemapUtils.getTinyRemapper(fullMappings, from, to).load(out);
 					out.acceptField(new IMappingProvider.Member("cyf", "CLOUDS", "Lcxt;"),
@@ -267,17 +265,6 @@ public class OptifineSetup {
 		}
 
 		return Optional.empty();
-	}
-
-	//We need to generate the full mappings with enum names as loom does not have these on the classpath
-	File getDevMappings() throws Exception {
-		CommandProposeFieldNames fieldNames = new CommandProposeFieldNames();
-		File fieldMappings = new File(versionDir, "mappings.full.tiny");
-		if (fieldMappings.exists()) {
-			fieldMappings.delete();
-		}
-		fieldNames.run(new String[]{getMinecraftJar().normalize().toString(), extractMappings().getAbsolutePath(), fieldMappings.getAbsolutePath()});
-		return fieldMappings;
 	}
 
 	//Extracts the devtime mappings out of yarn into a file

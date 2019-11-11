@@ -47,12 +47,6 @@ dependencies {
 	//Required for zt-zip, kinda annoying
 	include "org.slf4j:slf4j-simple:${project.slf4j_version}"
 	include "org.slf4j:slf4j-api:${project.slf4j_version}"
-
-	//Used only in dev to generate the field names
-	compile ("net.fabricmc:stitch:${project.stitch_version}") {
-		transitive = false
-	}
-	include "net.fabricmc:stitch:${project.stitch_version}"
 }
 
 task unzip(type: Copy) {
