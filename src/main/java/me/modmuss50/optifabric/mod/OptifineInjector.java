@@ -6,16 +6,19 @@ import me.modmuss50.optifabric.patcher.ChunkRendererFix;
 import me.modmuss50.optifabric.patcher.ClassCache;
 import net.fabricmc.loader.api.FabricLoader;
 import org.objectweb.asm.Opcodes;
-import org.spongepowered.asm.lib.tree.AbstractInsnNode;
-import org.spongepowered.asm.lib.tree.ClassNode;
-import org.spongepowered.asm.lib.tree.FrameNode;
-import org.spongepowered.asm.lib.tree.MethodNode;
+import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.FrameNode;
+import org.objectweb.asm.tree.MethodNode;
+
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
 public class OptifineInjector {
@@ -24,6 +27,8 @@ public class OptifineInjector {
 
 	String chunkRenderer;
 	String particleManager;
+
+	private static List<String> patched = new ArrayList<>();
 
 	public OptifineInjector(ClassCache classCache) {
 		this.classCache = classCache;
@@ -38,6 +43,12 @@ public class OptifineInjector {
 
 	//I have no idea why and how this works, if you know better please let me know
 	public final Consumer<ClassNode> transformer = target -> {
+
+		if(patched.contains(target.name)) {
+			System.out.println("Already patched" + target.name);
+			return;
+		}
+		patched.add(target.name);
 
 		//I cannot imagine this being very good at all
 		ClassNode source = getSourceClassNode(target);
@@ -75,7 +86,6 @@ public class OptifineInjector {
 			target.methods.forEach(methodNode -> methodNode.access = modAccess(methodNode.access));
 			target.fields.forEach(fieldNode -> fieldNode.access = modAccess(fieldNode.access));
 		}
-
 	};
 
 	private static int modAccess(int access) {
@@ -89,6 +99,9 @@ public class OptifineInjector {
 	private ClassNode getSourceClassNode(ClassNode classNode) {
 		String name = classNode.name.replaceAll("\\.", "/") + ".class";
 		byte[] bytes = classCache.getAndRemove(name);
+		if(bytes == null) {
+			throw new RuntimeException("Failed to find patched class for: " + name);
+		}
 		return ASMUtils.readClassFromBytes(bytes);
 	}
 

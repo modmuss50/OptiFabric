@@ -69,7 +69,7 @@ public class OptifabricSetup implements Runnable {
 
 	private boolean validateLoaderVersion() {
 		try {
-			if (!isVersionValid("fabricloader", ">=0.6.4")) {
+			if (!isVersionValid("fabricloader", ">=0.7.0")) {
 				if(!OptifabricError.hasError()){
 					OptifineVersion.jarType = OptifineVersion.JarType.INCOMPATIBE;
 					OptifabricError.setError("You are using an outdated version of Fabric Loader, please update!\n\nRe-run the installer, or update via your launcher. See the link for help!", "https://fabricmc.net/wiki/install");

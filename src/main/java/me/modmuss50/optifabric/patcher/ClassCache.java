@@ -1,5 +1,7 @@
 package me.modmuss50.optifabric.patcher;
 
+import org.apache.commons.lang3.Validate;
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -24,6 +26,7 @@ public class ClassCache {
 		if(classes.containsKey(name)){
 			throw new UnsupportedOperationException(name + " is already in ClassCache");
 		}
+		Validate.notNull(bytes, "bytes cannot be null");
 		classes.put(name, bytes);
 	}
 

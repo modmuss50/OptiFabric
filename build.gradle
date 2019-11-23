@@ -32,13 +32,13 @@ repositories {
 
 dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings "net.fabricmc:yarn:${project.yarn_mappings}"
+	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 	modCompile "net.fabricmc:fabric-loader:${project.loader_version}"
 
 	modCompile "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 	
-	modCompile "com.github.Chocohead:Fabric-ASM:${project.fabric_asm_version}"
-	include "com.github.Chocohead:Fabric-ASM:${project.fabric_asm_version}"
+	modCompile "com.github.modmuss50:Fabric-ASM:${project.fabric_asm_version}"
+	include "com.github.modmuss50:Fabric-ASM:${project.fabric_asm_version}"
 
 	//Used to handle the zip processing
 	compile "org.zeroturnaround:zt-zip:${project.zt_zip_version}"

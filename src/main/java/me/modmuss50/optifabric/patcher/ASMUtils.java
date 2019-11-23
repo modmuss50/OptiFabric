@@ -1,10 +1,12 @@
 package me.modmuss50.optifabric.patcher;
 
 import org.apache.commons.io.IOUtils;
-import org.spongepowered.asm.lib.ClassReader;
-import org.spongepowered.asm.lib.ClassWriter;
-import org.spongepowered.asm.lib.Opcodes;
-import org.spongepowered.asm.lib.tree.ClassNode;
+import org.apache.commons.lang3.Validate;
+import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.tree.ClassNode;
+
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,9 +16,10 @@ import java.util.jar.JarFile;
 public class ASMUtils {
 
 	public static ClassNode readClassFromBytes(byte[] bytes) {
+		Validate.notNull(bytes, "Cannot read null bytes");
 		ClassNode classNode = new ClassNode();
 		ClassReader classReader = new ClassReader(bytes);
-		classReader.accept(classNode, ClassReader.EXPAND_FRAMES);
+		classReader.accept(classNode, ClassReader.SKIP_FRAMES);
 		return classNode;
 	}
 
