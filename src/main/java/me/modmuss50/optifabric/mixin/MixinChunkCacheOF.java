@@ -1,7 +1,8 @@
 package me.modmuss50.optifabric.mixin;
 
-import net.fabricmc.indigo.renderer.accessor.AccessChunkRendererRegion;
-import net.fabricmc.indigo.renderer.render.TerrainRenderContext;
+
+import net.fabricmc.fabric.impl.client.indigo.renderer.accessor.AccessChunkRendererRegion;
+import net.fabricmc.fabric.impl.client.indigo.renderer.render.TerrainRenderContext;
 import net.minecraft.client.render.chunk.ChunkRendererRegion;
 import net.minecraft.util.math.BlockPos;
 import org.spongepowered.asm.mixin.Mixin;
