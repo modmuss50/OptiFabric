@@ -21,6 +21,9 @@ public class OptifineFixer {
 		//net/minecraft/client/render/block/BlockModelRenderer
 		registerFix("class_778", new BlockModelRendererFix());
 
+		//net/minecraft/client/Keyboard
+		registerFix("class_309", new KeyboardFix());
+
 		//net/minecraft/client/particle/ParticleManager
 		skipClass("class_702");
 	}
