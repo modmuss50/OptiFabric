@@ -7,7 +7,7 @@ import me.modmuss50.optifabric.mod.OptifineVersion;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.text.Text;
-import net.minecraft.util.SystemUtil;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -38,7 +38,7 @@ public abstract class MixinTitleScreen extends Screen {
 	@Inject(method = "render", at = @At("RETURN"))
 	private void render(int int_1, int int_2, float float_1, CallbackInfo info) {
 		if (!OptifabricError.hasError()) {
-			float fadeTime = this.doBackgroundFade ? (float) (SystemUtil.getMeasuringTimeMs() - this.backgroundFadeStart) / 1000.0F : 1.0F;
+			float fadeTime = this.doBackgroundFade ? (float) (Util.getMeasuringTimeMs() - this.backgroundFadeStart) / 1000.0F : 1.0F;
 			float fadeColor = this.doBackgroundFade ? MathHelper.clamp(fadeTime - 1.0F, 0.0F, 1.0F) : 1.0F;
 
 			int int_6 = MathHelper.ceil(fadeColor * 255.0F) << 24;

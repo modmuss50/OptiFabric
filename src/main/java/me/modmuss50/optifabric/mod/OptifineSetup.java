@@ -178,9 +178,10 @@ public class OptifineSetup {
 				File fullMappings = extractMappings();
 				return (out) -> {
 					RemapUtils.getTinyRemapper(fullMappings, from, to).load(out);
-					out.acceptField(new IMappingProvider.Member("cyf", "CLOUDS", "Lcxt;"),
+					//TODO use the mappings API here to stop neededing to change this each version
+					out.acceptField(new IMappingProvider.Member("dbq", "CLOUDS", "Ldbe;"),
 							"CLOUDS_OF");
-					out.acceptField(new IMappingProvider.Member("dng", "renderDistance", "I"),
+					out.acceptField(new IMappingProvider.Member("dqr", "renderDistance", "I"),
 							"renderDistance_OF");
 				};
 			} catch (Exception e) {

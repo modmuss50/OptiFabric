@@ -5,7 +5,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.SystemUtil;
+import net.minecraft.util.Util;
 
 public class Optifabric implements ModInitializer {
 
@@ -13,7 +13,7 @@ public class Optifabric implements ModInitializer {
 		if (OptifabricError.hasError()) {
 			ConfirmScreen confirmScreen = new ConfirmScreen(t -> {
 				if (t) {
-					SystemUtil.getOperatingSystem().open(OptifabricError.getErrorURL());
+					Util.getOperatingSystem().open(OptifabricError.getErrorURL());
 				} else {
 					MinecraftClient.getInstance().scheduleStop();
 				}
