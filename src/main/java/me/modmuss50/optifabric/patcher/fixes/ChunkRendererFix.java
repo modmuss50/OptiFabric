@@ -1,4 +1,4 @@
-package me.modmuss50.optifabric.patcher;
+package me.modmuss50.optifabric.patcher.fixes;
 
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.MappingResolver;
@@ -9,20 +9,20 @@ import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
 
-public class ChunkRendererFix {
+public class ChunkRendererFix implements ClassFixer {
 
 	//This removes the small change that optifine made to ChunkRenderer that is only required by forge
-	public static void fix(ClassNode classNode){
+	@Override
+	public void fix(ClassNode classNode, ClassNode old) {
 		MappingResolver mappingResolver = FabricLoader.getInstance().getMappingResolver();
 
-
-		for(MethodNode methodNode : classNode.methods){
+		for (MethodNode methodNode : classNode.methods) {
 			for (int i = 0; i < methodNode.instructions.size(); i++) {
 				AbstractInsnNode insnNode = methodNode.instructions.get(i);
-				if(insnNode instanceof MethodInsnNode){
+				if (insnNode instanceof MethodInsnNode) {
 					MethodInsnNode methodInsnNode = (MethodInsnNode) insnNode;
-					if(methodInsnNode.getOpcode() == Opcodes.INVOKEVIRTUAL){
-						if(methodInsnNode.name.equals("renderBlock")){
+					if (methodInsnNode.getOpcode() == Opcodes.INVOKEVIRTUAL) {
+						if (methodInsnNode.name.equals("renderBlock")) {
 
 							/*
 
@@ -55,12 +55,11 @@ public class ChunkRendererFix {
 
 
 							//Remove the model data call
-							methodNode.instructions.remove(methodNode.instructions.get(i -1));
+							methodNode.instructions.remove(methodNode.instructions.get(i - 1));
 						}
 					}
 				}
 			}
 		}
 	}
-	
 }
