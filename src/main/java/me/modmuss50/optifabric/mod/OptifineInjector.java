@@ -34,9 +34,8 @@ public class OptifineInjector {
 		this.classCache = classCache;
 	}
 
-	public void setup() throws IOException {
-
-		classCache.getClasses().forEach(s -> ClassTinkerers.addTransformation(s.replaceAll("/", ".").substring(0, s.length() - 6), transformer));
+	public void setup() {
+		classCache.getClasses().forEach(s -> ClassTinkerers.addReplacement(s.replaceAll("/", ".").substring(0, s.length() - 6), transformer));
 	}
 
 	//I have no idea why and how this works, if you know better please let me know
