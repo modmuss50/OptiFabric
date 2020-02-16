@@ -12,16 +12,21 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.spongepowered.asm.mixin.Mixins;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
 @SuppressWarnings("unused")
 public class OptifabricSetup implements Runnable {
 
+	public static final String OPTIFABRIC_INCOMPATIBLE = "optifabric:incompatible";
+
 	//This is called early on to allow us to get the transformers in beofore minecraft starts
 	@Override
 	public void run() {
 		if(!validateLoaderVersion()) return;
+		if(!validateMods()) return;
 
 		try {
 			OptifineSetup optifineSetup = new OptifineSetup();
@@ -65,6 +70,28 @@ public class OptifabricSetup implements Runnable {
 			}
 			throw new RuntimeException("Failed to setup optifine", e);
 		}
+	}
+
+	private boolean validateMods() {
+		List<ModMetadata> incompatibleMods = new ArrayList<>();
+		for (ModContainer container : FabricLoader.getInstance().getAllMods()) {
+			ModMetadata metadata = container.getMetadata();
+			if(metadata.containsCustomValue(OPTIFABRIC_INCOMPATIBLE)) {
+				incompatibleMods.add(metadata);
+			}
+		}
+		if (!incompatibleMods.isEmpty()) {
+			OptifineVersion.jarType = OptifineVersion.JarType.INCOMPATIBE;
+			StringBuilder errorMessage = new StringBuilder("One or more mods have stated they are incompatible with OptiFabric\nPlease remove OptiFabric or the following mods:\n");
+			for (ModMetadata metadata : incompatibleMods) {
+				errorMessage.append(metadata.getName())
+						.append(" (")
+						.append(metadata.getId())
+						.append(")\n");
+			}
+			OptifabricError.setError(errorMessage.toString());
+		}
+		return incompatibleMods.isEmpty();
 	}
 
 	private boolean validateLoaderVersion() {
