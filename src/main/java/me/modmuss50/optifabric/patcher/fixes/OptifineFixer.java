@@ -24,8 +24,14 @@ public class OptifineFixer {
 		//net/minecraft/client/Keyboard
 		registerFix("class_309", new KeyboardFix());
 
+		//net/minecraft/client/render/item/HeldItemRenderer
+		registerFix("class_759", new HeldItemRendererFix());
+
 		//net/minecraft/client/particle/ParticleManager
 		skipClass("class_702");
+
+		//net/minecraft/client/render/item/HeldItemRenderer$1
+		skipClass("class_759$1");
 	}
 
 	private void registerFix(String className, ClassFixer classFixer) {
