@@ -21,6 +21,7 @@ import java.util.function.Predicate;
 public class OptifabricSetup implements Runnable {
 
 	public static final String OPTIFABRIC_INCOMPATIBLE = "optifabric:incompatible";
+	public static File optifineRuntimeJar = null;
 
 	//This is called early on to allow us to get the transformers in beofore minecraft starts
 	@Override
@@ -37,6 +38,8 @@ public class OptifabricSetup implements Runnable {
 
 			OptifineInjector injector = new OptifineInjector(runtime.getRight());
 			injector.setup();
+
+			optifineRuntimeJar = runtime.getLeft();
 		} catch (Throwable e) {
 			if(!OptifabricError.hasError()){
 				OptifineVersion.jarType = OptifineVersion.JarType.INCOMPATIBE;
