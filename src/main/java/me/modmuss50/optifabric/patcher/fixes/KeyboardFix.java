@@ -10,7 +10,10 @@ import org.objectweb.asm.tree.InvokeDynamicInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.function.Function;
 
 public class KeyboardFix implements ClassFixer {
 	//net/minecraft/client/Keyboard.onKey(JIIII)V
@@ -30,21 +33,41 @@ public class KeyboardFix implements ClassFixer {
 		//Add the vanilla method back in
 		optifine.methods.add(methodNode);
 
-		List<String> anonymousMethods = new ArrayList<>();
-
-		//Find all speical anonymous method calls, a more direct and targeted approach to the lambada fixer
-		for (AbstractInsnNode instruction : methodNode.instructions) {
-			if (instruction instanceof InvokeDynamicInsnNode) {
-				InvokeDynamicInsnNode dynamicInsnNode = (InvokeDynamicInsnNode) instruction;
-				for (Object bsmArg : dynamicInsnNode.bsmArgs) {
-					if (bsmArg instanceof Handle) {
-						Handle handle = (Handle) bsmArg;
-						if (handle.getTag() == Opcodes.H_INVOKESPECIAL) {
-							anonymousMethods.add(handle.getName());
+		Function<MethodNode, Set<String>> findAnonymousMethods = methodNode12 -> {
+			Set<String> anonymousMethods1 = new HashSet<>();
+			//Find all speical anonymous method calls, a more direct and targeted approach to the lambada fixer
+			for (AbstractInsnNode instruction : methodNode12.instructions) {
+				if (instruction instanceof InvokeDynamicInsnNode) {
+					InvokeDynamicInsnNode dynamicInsnNode = (InvokeDynamicInsnNode) instruction;
+					for (Object bsmArg : dynamicInsnNode.bsmArgs) {
+						if (bsmArg instanceof Handle) {
+							Handle handle = (Handle) bsmArg;
+							if (handle.getTag() == Opcodes.H_INVOKESPECIAL) {
+								anonymousMethods1.add(handle.getName());
+							}
 						}
 					}
 				}
 			}
+			return anonymousMethods1;
+		};
+
+		Set<String> anonymousMethods = new HashSet<>(findAnonymousMethods.apply(methodNode));
+
+		//Now recursively look into those anonymous methods for more!
+		long added = 1;
+		while (added > 0) {
+			List<String> temp = new ArrayList<>();
+			for (String anonymousMethodName : anonymousMethods) {
+				for (MethodNode anonymousMethod : minecraft.methods) {
+					if (anonymousMethod.name.equals(anonymousMethodName)) {
+						Set<String> names = findAnonymousMethods.apply(anonymousMethod);
+						added = names.stream().filter(s -> !anonymousMethods.contains(s)).count();
+						temp.addAll(names);
+					}
+				}
+			}
+			anonymousMethods.addAll(temp);
 		}
 
 		//Copy all the synthetic methods back in that we possibly broke by replacing the method
