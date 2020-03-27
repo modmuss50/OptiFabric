@@ -34,7 +34,7 @@ public class HeldItemRendererFix implements ClassFixer {
 		insnList.add(new VarInsnNode(Opcodes.ALOAD, 4));
 		insnList.add(getInstList("net/optifine/shaders/Shaders", "isSkipRenderHand", String.format("(L%s;)Z", handName)));
 
-		oldNode.instructions.insertBefore(oldNode.instructions.getFirst(), insnList);
+	//	oldNode.instructions.insertBefore(oldNode.instructions.getFirst(), insnList);
 
 		//Remove the old method
 		optifine.methods.removeIf(methodNode -> methodNode.name.equals(renderFirstPersonItemName));
