@@ -27,6 +27,9 @@ public class OptifineFixer {
 		//net/minecraft/client/render/item/HeldItemRenderer
 		registerFix("class_759", new HeldItemRendererFix());
 
+		//net/minecraft/client/texture/SpriteAtlasTexture
+		registerFix("class_1059", new SpriteAtlasTextureFix());
+
 		//net/minecraft/client/particle/ParticleManager
 		skipClass("class_702");
 
