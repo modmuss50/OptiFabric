@@ -24,7 +24,7 @@ public class OptifineZipResourcePack extends ZipResourcePack {
 	public <T> T parseMetadata(ResourceMetadataReader<T> metaReader) throws IOException {
 		JsonObject pack = new JsonObject();
 		pack.addProperty("pack_format", 5);
-		pack.addProperty("description", "Added by OptiFabric\n" + Formatting.RED.toString() + "Do not disable");
+		pack.addProperty("description", "Added by OptiFabric\n" + Formatting.RED.toString() + "Disable if you have issues.");
 		pack.add("pack", new JsonObject());
 
 		if (!pack.has(metaReader.getKey())) {

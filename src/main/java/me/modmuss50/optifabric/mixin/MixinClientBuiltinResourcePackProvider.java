@@ -19,7 +19,7 @@ public class MixinClientBuiltinResourcePackProvider {
 	public <T extends ResourcePackProfile> void register(Map<String, T> registry, ResourcePackProfile.Factory<T> factory, CallbackInfo info)  {
 		File file = OptifabricSetup.optifineRuntimeJar;
 		if (file != null && file.isFile()) {
-			T optifineResourcePack = ResourcePackProfile.of("optifine", true, OptifineZipResourcePack.getSupplier(file), factory, ResourcePackProfile.InsertionPosition.TOP);
+			T optifineResourcePack = ResourcePackProfile.of("optifine", false, OptifineZipResourcePack.getSupplier(file), factory, ResourcePackProfile.InsertionPosition.TOP);
 			registry.put("optifine", optifineResourcePack);
 		}
 	}
