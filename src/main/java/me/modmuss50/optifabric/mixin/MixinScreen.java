@@ -24,19 +24,19 @@ public class MixinScreen extends DrawableHelper {
 
 	@Inject(method = "render", at = @At("RETURN"), remap = false)
 	private void render(int int_1, int int_2, float float_1, CallbackInfo ci){
-		if(RENDER_REGIONS == null){
-			try {
-				Field field = Option.class.getDeclaredField("RENDER_REGIONS");
-				RENDER_REGIONS = (CyclingOption) field.get(null);
-			} catch (NoSuchFieldException | IllegalAccessException e) {
-				throw new RuntimeException(e);
-			}
-
-		}
-		boolean enabled = RENDER_REGIONS.getMessage(MinecraftClient.getInstance().options).endsWith("ON");
-		if(enabled){
-			drawString(font, "OptiFabric: Render Regions is not supported!", 10, 5, Color.RED.getRGB());
-		}
+//		if(RENDER_REGIONS == null){
+//			try {
+//				Field field = Option.class.getDeclaredField("RENDER_REGIONS");
+//				RENDER_REGIONS = (CyclingOption) field.get(null);
+//			} catch (NoSuchFieldException | IllegalAccessException e) {
+//				throw new RuntimeException(e);
+//			}
+//
+//		}
+//		boolean enabled = RENDER_REGIONS.getMessage(MinecraftClient.getInstance().options).endsWith("ON");
+//		if(enabled){
+//			drawString(font, "OptiFabric: Render Regions is not supported!", 10, 5, Color.RED.getRGB());
+//		}
 	}
 
 }
