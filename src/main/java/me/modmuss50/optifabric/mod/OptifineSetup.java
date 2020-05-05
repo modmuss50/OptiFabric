@@ -235,11 +235,26 @@ public class OptifineSetup {
 			Path path = entrypointResult.get().getParent();
 			Path minecraftJar = path.resolve(String.format("minecraft-%s-client.jar", OptifineVersion.minecraftVersion)); //Lets hope you are using loom in dev
 			if (!Files.exists(minecraftJar)) {
-				throw new FileNotFoundException("Could not find minecraft jar!");
+				return getNewMinecraftDevJar();
 			}
 			return minecraftJar;
 		}
 		return entrypointResult.get();
+	}
+
+	//Loom 0.2.7 fallback
+	Path getNewMinecraftDevJar() throws FileNotFoundException {
+		Optional<Path> entrypointResult = getSource(Knot.class.getClassLoader(), "mappings/mappings.tiny");
+
+		if (entrypointResult.isPresent()) {
+			Path path = entrypointResult.get().getParent();
+			Path minecraftJar = path.resolve(String.format("minecraft-%s-client.jar", OptifineVersion.minecraftVersion)); //Lets hope you are using loom in dev
+			if (Files.exists(minecraftJar)) {
+				return minecraftJar;
+			}
+		}
+
+		throw new FileNotFoundException("Could not find minecraft jar!");
 	}
 
 	//Stolen from fabric loader
