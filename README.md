@@ -36,7 +36,8 @@ repositories {
 }
 
 dependencies {
-    modCompile 'com.github.modmuss50:OptiFabric:1.0.0-beta3'
+    // replace OptiFabric:<version> with latest version on https://www.curseforge.com/minecraft/mc-mods/optifabric/files that fits your MC version
+    modCompile 'com.github.modmuss50:OptiFabric:1.0.0-beta8'
 
     //Deps required for optifabric
     compile 'org.zeroturnaround:zt-zip:1.14'
