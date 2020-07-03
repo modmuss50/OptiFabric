@@ -78,11 +78,9 @@ public class OptifineInjector {
 		}
 
 		// Lets make every class we touch public
-		if (!FabricLoader.getInstance().isDevelopmentEnvironment()) {
-			target.access = modAccess(target.access);
-			target.methods.forEach(methodNode -> methodNode.access = modAccess(methodNode.access));
-			target.fields.forEach(fieldNode -> fieldNode.access = modAccess(fieldNode.access));
-		}
+		target.access = modAccess(target.access);
+		target.methods.forEach(methodNode -> methodNode.access = modAccess(methodNode.access));
+		target.fields.forEach(fieldNode -> fieldNode.access = modAccess(fieldNode.access));
 	};
 
 	private static int modAccess(int access) {

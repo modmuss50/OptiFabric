@@ -17,7 +17,7 @@ public class Optifabric implements ModInitializer {
 				} else {
 					MinecraftClient.getInstance().scheduleStop();
 				}
-			}, new LiteralText(Formatting.RED + "There was an error loading OptiFabric!"), new LiteralText(OptifabricError.getError()), Formatting.GREEN + OptifabricError.getHelpButtonText(), Formatting.RED + "Close Game");
+			}, new LiteralText(Formatting.RED + "There was an error loading OptiFabric!"), new LiteralText(OptifabricError.getError()),  new LiteralText(OptifabricError.getHelpButtonText()).formatted(Formatting.GREEN), new LiteralText("Close Game").formatted(Formatting.RED));
 
 			MinecraftClient.getInstance().openScreen(confirmScreen);
 		}

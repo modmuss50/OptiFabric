@@ -6,6 +6,7 @@ import me.modmuss50.optifabric.mod.OptifineVersion;
 
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.TitleScreen;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
@@ -36,14 +37,14 @@ public abstract class MixinTitleScreen extends Screen {
 	}
 
 	@Inject(method = "render", at = @At("RETURN"))
-	private void render(int int_1, int int_2, float float_1, CallbackInfo info) {
+	private void render(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo info) {
 		if (!OptifabricError.hasError()) {
 			float fadeTime = this.doBackgroundFade ? (float) (Util.getMeasuringTimeMs() - this.backgroundFadeStart) / 1000.0F : 1.0F;
 			float fadeColor = this.doBackgroundFade ? MathHelper.clamp(fadeTime - 1.0F, 0.0F, 1.0F) : 1.0F;
 
 			int int_6 = MathHelper.ceil(fadeColor * 255.0F) << 24;
 			if ((int_6 & -67108864) != 0) {
-				this.drawString(this.font, OptifineVersion.version, 2, this.height - 20, 16777215 | int_6);
+				this.drawStringWithShadow(matrices, this.textRenderer, OptifineVersion.version, 2, this.height - 20, 16777215 | int_6);
 			}
 		}
 	}
