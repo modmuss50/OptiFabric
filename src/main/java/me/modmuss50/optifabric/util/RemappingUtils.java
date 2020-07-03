@@ -8,7 +8,7 @@ public class RemappingUtils {
 	private static final MappingResolver reslover = FabricLoader.getInstance().getMappingResolver();
 	private static final String INTERMEDIARY = "intermediary";
 
-	public static String fromIntermediary(String className) {
+	public static String getClassName(String className) {
 		return fromIntermediaryDot(className).replaceAll("\\.", "/");
 	}
 	public static String fromIntermediaryDot(String className) {

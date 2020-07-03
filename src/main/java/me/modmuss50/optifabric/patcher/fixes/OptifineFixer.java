@@ -41,11 +41,11 @@ public class OptifineFixer {
 	}
 
 	private void registerFix(String className, ClassFixer classFixer) {
-		classFixes.computeIfAbsent(RemappingUtils.fromIntermediary(className), s -> new ArrayList<>()).add(classFixer);
+		classFixes.computeIfAbsent(RemappingUtils.getClassName(className), s -> new ArrayList<>()).add(classFixer);
 	}
 
 	private void skipClass(String className) {
-		skippedClass.add(RemappingUtils.fromIntermediary(className));
+		skippedClass.add(RemappingUtils.getClassName(className));
 	}
 
 	public boolean shouldSkip(String className) {

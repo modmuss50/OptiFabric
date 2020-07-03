@@ -18,7 +18,7 @@ public class HeldItemRendererFix implements ClassFixer {
 	//renderFirstPersonItem(Lnet/minecraft/client/network/AbstractClientPlayerEntity;FFLnet/minecraft/util/Hand;FLnet/minecraft/item/ItemStack;FLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V
 	private String renderFirstPersonItemName = RemappingUtils.getMethodName("class_759", "method_3228", "(Lnet/minecraft/class_742;FFLnet/minecraft/class_1268;FLnet/minecraft/class_1799;FLnet/minecraft/class_4587;Lnet/minecraft/class_4597;I)V");
 	//net/minecraft/util/Hand
-	private String handName = RemappingUtils.fromIntermediary("class_1268");
+	private String handName = RemappingUtils.getClassName("class_1268");
 
 	//Use the vanilla method here, while adding back some of optifines tweaks to it
 	@Override

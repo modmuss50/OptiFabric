@@ -27,6 +27,7 @@ repositories {
 		name "Modmuss50 Repository"
 		url 'https://maven.fabricmc.net/'
 	}
+	maven { url "https://dl.bintray.com/shedaniel/shedaniel-mods" }
 	maven { url 'https://jitpack.io' }
 }
 
@@ -47,6 +48,11 @@ dependencies {
 	//Required for zt-zip, kinda annoying
 	include "org.slf4j:slf4j-simple:${project.slf4j_version}"
 	include "org.slf4j:slf4j-api:${project.slf4j_version}"
+
+	modRuntime "me.shedaniel:RoughlyEnoughItems:4.5.4"
+	modCompileOnly("me.shedaniel.cloth.api:cloth-client-events-v0:1.0.4") {
+		transitive(false)
+	}
 }
 
 task unzip(type: Copy) {

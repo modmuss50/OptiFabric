@@ -54,6 +54,10 @@ public class OptifabricSetup implements Runnable {
 		}
 
 		Mixins.addConfiguration("optifabric.optifine.mixins.json");
+
+		if(FabricLoader.getInstance().isModLoaded("cloth-client-events-v0")){
+			Mixins.addConfiguration("optifabric.compat.cloth.mixins.json");
+		}
 	}
 
 	//I check the version like this as I want to show issues on our error screen
