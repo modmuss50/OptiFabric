@@ -1,3 +1,46 @@
+# The future of OptiFabric and Recommended alternatives
+
+In 1.15 and 1.16 optifine has been casuing a lot of incompatibilities with a growing number of mods, this is due to the way optifine changes the vanilla code in increasingly invasive and incompatible ways. Fixing these crashes isn't easy or fun and takes a lot of time and energy that I don't have.
+
+I have no plans to continue updating OptiFabric going forward, thus with the help of LambdAurora I have compiled a list of mods that replace and supersede Optifine:
+
+## [Sodium](https://github.com/jellysquid3/sodium-fabric/releases/tag/mc1.16.1-0.1.0)
+
+[Sodium](https://github.com/jellysquid3/sodium-fabric/releases/tag/mc1.16.1-0.1.0) is a free and open source fabric mod made by JellySquid that [drastically increases the performance](https://www.youtube.com/watch?v=0fAB6pJK6U4) of Minecraft. Sodium utilises modern rendering techniques along with a range of other optimisations.  More more information can be found on the download page linked.
+
+![](https://cdn.discordapp.com/attachments/602805058316533770/731936807909851296/compare.png)
+
+
+## Other recommended mods
+
+### [Canvas](https://www.curseforge.com/minecraft/mc-mods/canvas-renderer)
+
+[Canvas](https://www.curseforge.com/minecraft/mc-mods/canvas-renderer) focuses the use of shaders to improve the visual appearance of the game along with providing performance improvements. (*Incompatible with Sodium*)
+
+### [Ok Zoomer](https://www.curseforge.com/minecraft/mc-mods/ok-zoomer) - [Logicial Zoom](https://www.curseforge.com/minecraft/mc-mods/logical-zoom) - [WI Zoom](https://www.curseforge.com/minecraft/mc-mods/wi-zoom)
+
+These 3 mods are each a great replacement to optifine's much loved zoom feature. They provide more options than optifine's zoom functionality. (*You only need to install one*)
+
+### [Colormatic](https://www.curseforge.com/minecraft/mc-mods/colormatic)
+
+[Colormatic](https://www.curseforge.com/minecraft/mc-mods/colormatic) provides support for resource packs that use Optifine's custom color features.
+
+### [LambDynamicLights](https://www.curseforge.com/minecraft/mc-mods/lambdynamiclights)
+
+[LambDynamicLights](https://www.curseforge.com/minecraft/mc-mods/lambdynamiclights) add dynamic lights to Minecraft similar to Optifine's.
+
+### [motioNO](https://www.curseforge.com/minecraft/mc-mods/motiono)
+
+[motioNO](https://www.curseforge.com/minecraft/mc-mods/motiono) is a client only mod that prevents Minecraft from changing the FOV when sprinting.
+
+### [Lithium](https://www.curseforge.com/minecraft/mc-mods/lithium) and [Phosphor](https://www.curseforge.com/minecraft/mc-mods/phosphor)
+
+[Lithium](https://www.curseforge.com/minecraft/mc-mods/lithium) provides a great improvement to server performance while [Phosphor](https://www.curseforge.com/minecraft/mc-mods/phosphor) targets lighting performance. Both mods can be installed on the client or the server and are also made by Jelly Squid.
+
+
+## Need Help?
+
+If you need help installing any of these mods feel free to ask in the [fabric discord server](https://discord.gg/v6v4pMv) in the player-support channel. If you know of any mods that should be showcased here please get in contact with me.
 # OptiFabric
 
 ![](https://ss.modmuss50.me/javaw_2019-05-22_20-33-34.jpg)
