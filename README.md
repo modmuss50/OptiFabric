@@ -4,9 +4,9 @@ In 1.15 and 1.16 optifine has been casuing a lot of incompatibilities with a gro
 
 I have no plans to continue updating OptiFabric going forward, thus with the help of LambdAurora I have compiled a list of mods that replace and supersede Optifine:
 
-## [Sodium](https://github.com/jellysquid3/sodium-fabric/releases/tag/mc1.16.1-0.1.0)
+## [Sodium](https://www.curseforge.com/minecraft/mc-mods/sodium)
 
-[Sodium](https://github.com/jellysquid3/sodium-fabric/releases/tag/mc1.16.1-0.1.0) is a free and open source fabric mod made by JellySquid that [drastically increases the performance](https://www.youtube.com/watch?v=0fAB6pJK6U4) of Minecraft. Sodium utilises modern rendering techniques along with a range of other optimisations.  More more information can be found on the download page linked.
+[Sodium](https://www.curseforge.com/minecraft/mc-mods/sodium) is a free and open source fabric mod made by JellySquid that [drastically increases the performance](https://www.youtube.com/watch?v=0fAB6pJK6U4) of Minecraft. Sodium utilises modern rendering techniques along with a range of other optimisations.  More more information can be found on the download page linked.
 
 ![](https://cdn.discordapp.com/attachments/602805058316533770/731936807909851296/compare.png)
 
