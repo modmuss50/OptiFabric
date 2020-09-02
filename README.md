@@ -1,4 +1,6 @@
-# The future of OptiFabric and Recommended alternatives
+# [OptiFabric Development has moved](https://github.com/Chocohead/OptiFabric)
+
+## The future of OptiFabric and Recommended alternatives
 
 In 1.15 and 1.16 optifine has been casuing a lot of incompatibilities with a growing number of mods, this is due to the way optifine changes the vanilla code in increasingly invasive and incompatible ways. Fixing these crashes isn't easy or fun and takes a lot of time and energy that I don't have.
 
